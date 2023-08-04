@@ -84,8 +84,8 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
     }
     return (
         <>
-            <div className="flex justify-between border-2 rounded-lg border-cor-secundaria py-1.5">
-                <div className="flex justify-center w-60 border-gray-300 border-r-2">
+            <div className="flex border-2 rounded-lg border-cor-secundaria py-1.5">
+                <div className="flex justify-center w-[16rem] border-gray-300 border-r-2">
                     {!editButtonName ?
                         <div className="flex items-center justify-between pl-4 pr-3 w-full">
                             <p className='font-medium'>{nameCell}</p>
@@ -115,7 +115,7 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
                             </button>
                         </form>}
                 </div>
-                <div className="flex justify-center w-56 border-gray-300 border-r-2">
+                <div className="flex justify-center w-60 border-gray-300 border-r-2">
                     {!editButtonValue ?
                         <div className="flex items-center justify-between pl-4 pr-3 w-full">
                             <p className='font-medium'>R${valueCell}</p>
@@ -146,12 +146,12 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
                             </button>
                         </form>}
                 </div>
-                <div className="flex justify-center w-28 border-gray-300 border-r-2">
+                <div className="flex justify-center w-32 border-gray-300 border-r-2">
                     <div className="flex items-center justify-center w-full">
                         <p className='font-medium'>{installmentCell}</p>
                     </div>
                 </div>
-                <div className="flex justify-center w-56 border-gray-300 border-r-2">
+                <div className="flex justify-center w-60 border-gray-300 border-r-2">
                     {!editButtonType ?
                         <div className="flex items-center justify-between pl-4 pr-3 w-full">
                             <p className='font-medium'>{typeCell}</p>

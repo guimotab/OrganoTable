@@ -106,7 +106,7 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, optionsB
 
     const editButtons = [
         {
-            classDiv: "flex justify-center w-60 border-gray-300 border-r-2",
+            classDiv: "flex justify-center w-[16rem] border-gray-300 border-r-2",
             editButton: editButtonName,
             constCell: nameCell,
             onStartEditCell: onStartEditCell,
@@ -122,7 +122,7 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, optionsB
             maxLength: 16,
             pattern: "^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$",
         },{
-            classDiv: "flex justify-center w-56 border-gray-300 border-r-2",
+            classDiv: "flex justify-center w-60 border-gray-300 border-r-2",
             tagP: "R$",
             editButton: editButtonValue,
             constCell: valueCell,
@@ -139,7 +139,7 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, optionsB
             maxLength: 9,
             // pattern: "^(\d+)(\,|\.)(\d{2})?$",
         },{
-            classDiv: "flex justify-center w-28 border-gray-300 border-r-2",
+            classDiv: "flex justify-center w-32 border-gray-300 border-r-2",
             editButton: editButtonInstallment,
             constCell: installmentCell,
             onStartEditCell: onStartEditCell,
@@ -154,7 +154,7 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, optionsB
             placeholder: installmentCell,
             maxLength: 3,
         },{
-            classDiv: "flex justify-center w-56 border-gray-300 border-r-2",
+            classDiv: "flex justify-center w-60 border-gray-300 border-r-2",
             editButton: editButtonType,
             constCell: typeCell,
             onStartEditCell: onStartEditCell,
@@ -174,7 +174,7 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, optionsB
 
     return (
         <>
-            <div className='flex justify-between border-2 rounded-lg border-cor-secundaria py-1.5' onMouseEnter={event => showOptionsButton()}
+            <div className='flex border-2 rounded-lg border-cor-secundaria py-1.5' onMouseEnter={event => showOptionsButton()}
                 onMouseLeave={event => hideOptionsButton()}
             >
                 {editButtons.map((button, index) =>

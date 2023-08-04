@@ -38,11 +38,6 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
 
     const [optionsButtons, setOptionsButtons] = useState(false)
 
-
-    // useEffect(() => {
-    //     setExpenseClass(new Expenses())
-    // }, [dateCurrent])
-
     useEffect(() => {
         const arrayPeriods = [] as IPeriodsItens[]
         tables.forEach(table => table.periodsItens![0].id === "" ? "" : arrayPeriods.push(...table.periodsItens!))
@@ -132,11 +127,11 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
         return salaryFloat
     }
     const titleTr = [
-        { name: "Nome", width: "flex text-gray-600 justify-start w-60 font-medium pl-2" },
-        { name: "Valor", width: "flex text-gray-600 justify-start w-56 font-medium pl-2" },
-        { name: "Parcela", width: "flex text-gray-600 justify-start w-28 font-medium pl-2" },
-        { name: "Tipo", width: "flex text-gray-600 justify-start w-56 font-medium pl-2" },
-        { name: "Pago", width: "flex text-gray-600 justify-start w-24 font-medium pl-2" },
+        { name: "Nome", width: "flex text-gray-600 justify-start w-[16rem] font-medium pl-2" },
+        { name: "Valor", width: "flex text-gray-600 justify-start w-60 font-medium pl-2" },
+        { name: "Parcela", width: "flex text-gray-600 justify-start w-32 font-medium pl-2" },
+        { name: "Tipo", width: "flex text-gray-600 justify-start w-60 font-medium pl-2" },
+        { name: "Pago", width: "flex text-gray-600 justify-start w-24 font-medium pl-1" },
     ]
     return (
         <div className='w-full'>
