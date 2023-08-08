@@ -4,7 +4,9 @@ import { createFormatValue } from '../../utils/createFormatValue'
 import { LocalStorager } from '../../service/LocalStorager'
 import { CurrentTable } from '../../models/CurrentTable'
 import EditCell from '../EditCell'
-import { log } from 'console'
+import { IoMdInformationCircle } from 'react-icons/io'
+import { BsTrash3Fill } from 'react-icons/bs'
+
 
 interface TableCellsProps {
     name: string
@@ -14,8 +16,8 @@ interface TableCellsProps {
     paid: boolean
     id: string
     repeat: boolean
-    optionsButtons: boolean
-    setOptionsButtons: React.Dispatch<React.SetStateAction<boolean>>
+    // setOptionsButtons: React.Dispatch<React.SetStateAction<boolean>>
+    // optionsButtons: boolean
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
     table: IObjectTable
     tables: IObjectTable[]
@@ -24,14 +26,16 @@ interface TableCellsProps {
     noButtons?: boolean
 }
 
-const TableCells = ({ name, value, installment, type, paid, id, repeat, optionsButtons, setOptionsButtons, table, tables, setAllTables, setAllert, noButtons = false }: TableCellsProps) => {
+const TableCells = ({ name, value, installment, type, paid, id, repeat, table, tables, setAllTables, setAllert, noButtons = false }: TableCellsProps) => {
     const currentTable = new CurrentTable(table)
 
     const [editButtonName, setEditButtonName] = useState(0)
     const [editButtonValue, setEditButtonValue] = useState(0)
-    const [editButtonInstallment, setEditButtonInstallment] = useState(0)
-    const [editButtonType, setEditButtonType] = useState(0)
-    
+    const [optionsButtons, setOptionsButtons] = useState(false)
+
+    // const [editButtonInstallment, setEditButtonInstallment] = useState(0)
+    // const [editButtonType, setEditButtonType] = useState(0)
+
     const [nameCell, setNameCell] = useState(name)
     const [valueCell, setValueCell] = useState(value)
     const [installmentCell, setInstallmentCell] = useState(installment)
@@ -101,11 +105,11 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, optionsB
         const valueInput = event.target.value
         let valueTypeCell = typeCell
         let valueInstallmentCell = installmentCell
-        
-        if(constCell === typeCell){
+
+        if (constCell === typeCell) {
             setTypeCell(valueInput)
             valueTypeCell = valueInput
-        } else if (constCell === installmentCell){
+        } else if (constCell === installmentCell) {
             setInstallmentCell(valueInput)
             valueInstallmentCell = valueInput
         }
@@ -121,8 +125,8 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, optionsB
         const indexObjectCurrent = tables.findIndex(object => object.monthTable === currentTable.monthTable)
         const idObjectCurrent = currentTable.itensTable.findIndex(item => item.id === idCell)
         const newObjects = [...tables]
-        
-        
+
+
         newObjects[indexObjectCurrent].itensTable[idObjectCurrent] = cellEdited
         setAllTables(newObjects)
         LocalStorager.saveInformations(tables)
@@ -170,54 +174,7 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, optionsB
             maxLength: 12,
             // pattern: "^(\d+)(\,|\.)(\d{2})?$",
         }
-        //  {
-        //     classDiv: "flex justify-center w-32 border-gray-300 border-r-2",
-        //     editButton: editButtonInstallment,
-        //     constCell: installmentCell,
-        //     onStartEditCell: onStartEditCell,
-        //     onEndEditCell: onEndEditCell,
-        //     setEditButton: setEditButtonInstallment,
-        //     setConstCell: setInstallmentCell,
-        //     type: 'text',
-        //     value: installmentCell,
-        //     onChange: (event: React.ChangeEvent<HTMLInputElement>) => setInstallmentCell(event.target.value),
-        //     autoFocus: true,
-        //     className: 'px-1 w-full font-medium placeholder:font-medium border-cor-outline',
-        //     placeholder: installmentCell,
-        //     maxLength: 3,
-        // }
-        // ,{
-        //     classDiv: "flex justify-center w-60 border-gray-300 border-r-2",
-        //     editButton: editButtonType,
-        //     constCell: typeCell,
-        //     onStartEditCell: onStartEditCell,
-        //     onEndEditCell: onEndEditCell,
-        //     setEditButton: setEditButtonType,
-        //     setConstCell: setTypeCell,
-        //     type: 'text',
-        //     value: typeCell,
-        //     onChange: (event: React.ChangeEvent<HTMLInputElement>) => setTypeCell(event.target.value),
-        //     autoFocus: true,
-        //     className: 'px-1 w-full font-medium placeholder:font-medium border-cor-outline',
-        //     placeholder: typeCell,
-        //     maxLength: 18,
-        //     pattern: "^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$",
-        // },
     ]
-    // const installmentSelectInput = [
-    //     { label: "1/1" },
-    //     { label: "1/2" },
-    //     { label: "1/3" },
-    //     { label: "1/4" },
-    //     { label: "1/5" },
-    //     { label: "1/6" },
-    //     { label: "1/7" },
-    //     { label: "1/8" },
-    //     { label: "1/9" },
-    //     { label: "1/10" },
-    //     { label: "1/11" },
-    //     { label: "1/12" }
-    // ]
     const optionsSelectInput = [
         { label: "Despesas" },
         { label: "Investimento" },
@@ -226,10 +183,17 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, optionsB
         { label: "Outros" }
     ]
     return (
-        <>
-            <div className='flex border-2 rounded-lg border-cor-secundaria py-1.5' onMouseEnter={event => showOptionsButton()}
-                onMouseLeave={event => hideOptionsButton()}
-            >
+        <div className='flex'>
+            {optionsButtons ?
+                <div className='flex justify-end items-center pr-3 w-24 gap-2'
+                    onMouseEnter={event => showOptionsButton()}
+                    onMouseLeave={event => hideOptionsButton()}>
+                    <IoMdInformationCircle size={25} className='text-cor-terciaria hover:text-cor-hover'/>
+                    <BsTrash3Fill size={21} className='text-cor-terciaria hover:text-cor-erro'/>
+                </div> : <div className='w-24'></div>
+            }
+            <div className='flex flex-grow border-2 rounded-lg border-cor-secundaria py-1.5' onMouseEnter={event => showOptionsButton()}
+                onMouseLeave={event => hideOptionsButton()}>
                 {editButtons.map((button, index) =>
                     <div className={button.classDiv} key={index}>
                         <EditCell
@@ -247,11 +211,6 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, optionsB
                 )}
                 <div className='flex justify-start pl-4 w-32 border-gray-300 border-r-2'>
                     <p className='font-medium'>{installmentCell}</p>
-                    {/* <select onChange={event => changeTypeInput(event, installmentCell)} value={"2/3"} className='w-24 font-medium'>
-                        {installmentSelectInput.map((option, index) =>
-                            <option key={index} className='font-medium'>{option.label}</option>
-                        )}
-                    </select> */}
                 </div>
                 <div className='flex justify-start pl-4 w-48 border-gray-300 border-r-2'>
                     <select onChange={event => changeTypeInput(event, typeCell)} value={typeCell} className='w-40 font-medium'>
@@ -260,20 +219,18 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, optionsB
                         )}
                     </select>
                 </div>
-                <div className='flex justify-center w-24'>
-                    <div className='flex justify-center'>
-                        {
-                            <input
-                                type="checkbox"
-                                checked={paidCell}
-                                onChange={event => changeChecked(event)}
-                                className='flex self-center'
-                            />
-                        }
-                    </div>
+                <div className='flex w-24 text-center justify-center'>
+                    {
+                        <input
+                            type="checkbox"
+                            checked={paidCell}
+                            onChange={event => changeChecked(event)}
+                            className='flex self-center'
+                        />
+                    }
                 </div>
             </div >
-        </>
+        </div>
     )
 }
 

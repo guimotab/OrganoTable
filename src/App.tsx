@@ -64,9 +64,12 @@ function App() {
     <div className="grid grid-cols-[14rem_auto] h-screen w-screen">
       {/* <button onClick={event => console.log(dayTime(dateCurrent))}>Teste</button> */}
         <Aside closePopUpClickOut={closePopUpClickOut}/>
-      <div className='col-start-2 flex flex-col px-24 pt-14 gap-5 w-full overflow-hidden'>
+      <div className='col-start-2 flex flex-col pr-20 pt-14 gap-5 w-full overflow-hidden'>
         <div onClick={closePopUpClickOut}>
-          <InputSalary table={currentTable} tables={tables} dateCurrent={dateCurrent} setTables={setTables} />
+          <div className='pl-24'>
+            <InputSalary table={currentTable} tables={tables} dateCurrent={dateCurrent} setTables={setTables} />
+          </div>
+          
           <Table
             table={currentTable}
             tables={tables}

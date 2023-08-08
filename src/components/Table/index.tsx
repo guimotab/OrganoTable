@@ -36,7 +36,6 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
 
     const [expenseClass, setExpenseClass] = useState(new Expenses())
 
-    const [optionsButtons, setOptionsButtons] = useState(false)
 
     useEffect(() => {
         const arrayPeriods = [] as IPeriodsItens[]
@@ -56,15 +55,13 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
     function renderCells(table: ITableItens, index: number) {
         //  return <></>
         const [idTable, idItens] = [parseFloat(IdTable.returnIdTable(table.id)), parseFloat(IdTable.returnIdCell(table.id))]
-        
+
         if (!table.repeat) {
             return <TableCells
                 key={`${idTable}${idItens}`}
                 name={table.name}
                 value={table.value}
                 installment={table.installment}
-                optionsButtons={optionsButtons}
-                setOptionsButtons={setOptionsButtons}
                 type={table.type}
                 paid={table.paid}
                 id={table.id}
@@ -97,22 +94,22 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
         if (item && isAnnual) {
             // setExpensesPeriodItens(expensesArrayPeriodItens)
             return <TableCellsPeriods
-                key={`${idTable + 1}${idItens}`}
-                name={item.name}
-                value={valueOfCell()}
-                installment={item.installment}
-                type={item.type}
-                paid={item.paid}
-                id={item.id}
-                repeat={item.repeat}
-                expenseClass={expenseClass}
-                expensesPeriodItens={expensesPeriodItens}
-                setExpensesPeriodItens={setExpensesPeriodItens}
-                table={currentTable.getInformations()}
-                tables={tables}
-                setAllTables={setTables}
-                setAllert={setAllert}
-            />
+                    key={`${idTable + 1}${idItens}`}
+                    name={item.name}
+                    value={valueOfCell()}
+                    installment={item.installment}
+                    type={item.type}
+                    paid={item.paid}
+                    id={item.id}
+                    repeat={item.repeat}
+                    expenseClass={expenseClass}
+                    expensesPeriodItens={expensesPeriodItens}
+                    setExpensesPeriodItens={setExpensesPeriodItens}
+                    table={currentTable.getInformations()}
+                    tables={tables}
+                    setAllTables={setTables}
+                    setAllert={setAllert}
+                />
         }
     }
     function resultOnMonth() {
@@ -133,13 +130,13 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
         { name: "Tipo", width: "flex text-gray-600 justify-start w-48 font-medium pl-3" },
         { name: "Pago", width: "flex text-gray-600 justify-start w-24 font-medium pl-2" },
     ]
-    
+
     return (
         <div className=' w-full'>
             {itensTable.itensTable ?
                 <div className='flex flex-col gap-1 w-full'>
                     <div className='flex flex-col gap-2'>
-                        <div className='flex justify-between h-fit pr-2'>
+                        <div className='flex justify-between h-fit pr-2 pl-24'>
                             <TableTitle
                                 name={currentTable.monthTable}
                                 setExpenseClass={setExpenseClass}
@@ -149,17 +146,17 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
                             <CreateCell onClick={onClick} />
                         </div>
                         <div className='flex flex-col gap-1 w-full scrollbar'>
-                            <div className='flex pr-4 py-1'>
+                            <div className='flex pr-4 pl-24 py-1'>
                                 {titleTr.map((title, index) => <div className={title.width} key={index}>{title.name}</div>)}
                             </div>
                             <section className='flex flex-col pr-2 gap-1 max-h-[21rem] overflow-auto '>
-                                {/* {optionsButtons? <div className='relative right-7'>oi</div>: <></>} */}
+                                {/* {optionsButtons? <div className='relative right-7 text-black'>oi</div>: <></>} */}
                                 {itensTable.itensTable.map((table: ITableItens, index) => renderCells(table, index))}
                                 {periodItens.map((itens, index) => renderEspecialCells(itens.id, index, itens))}
                             </section>
                         </div>
                     </div>
-                    <div className='pr-2'>
+                    <div className='pr-2 pl-24'>
                         <ResultOnMonth resultOnMonth={resultOnMonth()} />
                     </div>
                 </div>

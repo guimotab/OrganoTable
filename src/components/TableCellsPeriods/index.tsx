@@ -110,8 +110,10 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
         { label: "Outros" }
     ]
     return (
-        <>
-            <div className="flex border-2 rounded-lg border-cor-secundaria py-1.5">
+        <div className="flex">
+            <div className="w-24">
+            </div>
+            <div className="flex flex-grow border-2 rounded-lg border-cor-secundaria py-1.5">
                 <div className="flex justify-center w-[18rem] border-gray-300 border-r-2">
                     {!editButtonName ?
                         <div className="flex items-center justify-between pl-4 pr-3 w-full">
@@ -218,7 +220,7 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
                 <div className='w-24'>
                 </div>
             </div >
-        </>
+        </div>
     )
 }
 
