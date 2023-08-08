@@ -11,7 +11,9 @@ export class Tables {
 
     createNewTable(dateCurrent: string) {
         
+        console.log(this.highestId());
         const newIdTable = this.highestId() + 1
+        
         const newTable = {
             id: `${newIdTable}`,
             salary: "",
@@ -44,8 +46,6 @@ export class Tables {
         const realTables = this._tables.filter(table => table.id !== "0")
         try {
             realTables.sort((a, b) => parseFloat(a.id) - parseFloat(b.id))
-            console.log(realTables);
-            
             const lastIndex = realTables[realTables.length - 1].id
             return parseFloat(lastIndex)
         } catch {

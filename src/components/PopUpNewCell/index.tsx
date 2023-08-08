@@ -30,6 +30,8 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, ex
     const [type, setType] = useState("")
     const [valueInstallment, setValueInstallment] = useState("1")
     const [repeat, setRepeat] = useState(false)
+    const [checkInstallment, setCheckInstallment] = useState(false)
+    const [checkRepeat, setCheckRepeat] = useState(false)
 
     const [typeRepeat, setTypeRepeat] = useState("")
     const [daysRepeat, setDaysRepeat] = useState<string[]>([])
@@ -136,11 +138,34 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, ex
             setDaysRepeat([])
         }
         if (type === typeRepeat) {
-            setRepeat(false)
+            setDaysRepeat([])
             setTypeRepeat("")
         } else {
             setTypeRepeat(type)
         }
+    }
+    function changeInstallment() {
+        if (!installment) {
+            setValueInstallment("2")
+        } else if (installment) {
+            setValueInstallment("1")
+        }
+        setCheckInstallment(!checkInstallment)
+        setInstallment(!installment)
+    }
+    function changeRepeat() {
+        setRepeat(!repeat)
+        setCheckRepeat(!checkRepeat)
+    }
+    function changeValueInstallment(event: React.ChangeEvent<HTMLSelectElement>) {
+        if(event.target.value !== "1/1"){
+            setCheckInstallment(true)
+        } else {
+            setCheckInstallment(false)
+        }
+        let value = event.target.value
+        value = value.split("/")[1]
+        setValueInstallment(value)
     }
 
     const formInput = [
@@ -215,19 +240,27 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, ex
         { label: "Saúde" },
         { label: "Outros" }
     ]
-    const installmentSelectInput = [
-        { label: "1/2" },
-        { label: "1/3" },
-        { label: "1/4" },
-        { label: "1/5" },
-        { label: "1/6" },
-        { label: "1/7" },
-        { label: "1/8" },
-        { label: "1/9" },
-        { label: "1/10" },
-        { label: "1/11" },
-        { label: "1/12" }
-    ]
+    let installmentSelectInput 
+    if(checkRepeat){
+        installmentSelectInput = [
+            { label: "1/1" }
+        ]
+    } else {
+        installmentSelectInput = [
+            { label: "1/1" },
+            { label: "1/2" },
+            { label: "1/3" },
+            { label: "1/4" },
+            { label: "1/5" },
+            { label: "1/6" },
+            { label: "1/7" },
+            { label: "1/8" },
+            { label: "1/9" },
+            { label: "1/10" },
+            { label: "1/11" },
+            { label: "1/12" }
+        ]
+    }
     return (
         <div
             onMouseLeave={() => setMouseOutPopUp(true)}
@@ -252,45 +285,33 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, ex
                 />)}
                 <div className='flex items-center justify-between gap-2 ml-5 mr-5 px-2 '>
                     <label className='text-white font-medium'>Tipo: </label>
-                    <select onChange={event => setType(event.target.value)}>
+                    <select onChange={event => setType(event.target.value)} className='font-medium'>
                         {optionsSelectInput.map((option, index) =>
-                            <option key={index}>{option.label}</option>
+                            <option key={index} className='font-medium'>{option.label}</option>
                         )}
                     </select>
                 </div>
-                <div className='flex gap-1 ml-5 mr-8 px-2'>
-                    <label className='text-white font-medium'>Parcelado</label>
-                    <input
-                        type="checkbox"
-                        onChange={event => setInstallment(!installment)}
-                    />
-                </div>
-                {installment ?
-                    <select onChange={event => ""} className='w-24 font-medium'>
+                <div className='flex justify-between mr-7'>
+                    <div className='flex gap-1 ml-5 mr-8 px-2'>
+                        <label className='text-white font-medium'>Parcelado: </label>
+                    </div>
+                    <select onChange={event => changeValueInstallment(event)} className='w-24 font-medium'>
                         {installmentSelectInput.map((option, index) =>
                             <option key={index} className='font-medium'>{option.label}</option>
                         )}
                     </select>
-                    // <FormInput
-                    //     key={5}
-                    //     label="Parcelas:"
-                    //     type="number"
-                    //     minLength={2}
-                    //     maxLength={12}
-                    //     value={valueInstallment}
-                    //     onChange={setValueInstallment}
-                    //     required={true}
-                    // /> 
-                    : <></>
-                }
-                <div className='flex gap-1 ml-5 mr-8 px-2'>
-                    <label className='text-white font-medium'>Repetir</label>
-                    <input
-                        checked={repeat}
-                        type="checkbox"
-                        onChange={event => setRepeat(!repeat)}
-                    />
                 </div>
+                {
+                    !checkInstallment ?
+                        <div className='flex gap-1 ml-5 mr-8 px-2'>
+                            <label className='text-white font-medium'>Repetir</label>
+                            <input
+                                checked={repeat}
+                                type="checkbox"
+                                onChange={event => changeRepeat()}
+                            />
+                        </div> : <></>
+                }
                 {repeat ?
                     <>
                         <div className='flex mx-7 justify-between'>
@@ -321,7 +342,7 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, ex
                 >Criar</button>
             </form>
 
-        </div>
+        </div >
     )
 }
 

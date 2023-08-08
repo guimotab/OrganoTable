@@ -32,6 +32,7 @@ export function createOthersInstallments(installment: string, currentTable: Curr
                 allTables.tables[existTable].itensTable.push(newCellTable.returnInformations())
             }
         } else if (!thisTable) {//se não existe alguma tabela igual mês
+            allTables.updateTables(currentTable.monthTable, currentTable)
             allTables.createNewTable(thisMonthYear)
             const indexThisTable = allTables.tables.findIndex(table => table.monthTable === `${thisMonthYear}`)
             const thisTable = allTables.tables[indexThisTable]
