@@ -34,7 +34,7 @@ const TableTitle = ({ name, setDateCurrent, expensesPeriodItens, setExpensesPeri
                 className="flex h-full items-center px-2">
                 <BiLeftArrow strokeWidth={1} size={22} color="#112D4E"/>
             </button>
-            <h1 className='flex h-full justify-center text-center text-cor-terciaria text-2xl font-bold'>
+            <h1 className='flex h-full w-48 justify-center text-center text-cor-terciaria text-2xl font-bold'>
                 {name}
             </h1>
             <button

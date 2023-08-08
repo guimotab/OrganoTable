@@ -1,3 +1,4 @@
+import { table } from "console";
 import { IObjectTable } from "../shared/IObjectTable";
 import IPeriodsItens from "../shared/IPeriodsItens";
 import { ITableItens } from "../shared/ITableItens";
@@ -8,10 +9,26 @@ export class Tables {
         this._tables = tables
     }
 
+    createNewTable(dateCurrent: string) {
+        
+        const newIdTable = this.highestId() + 1
+        const newTable = {
+            id: `${newIdTable}`,
+            salary: "",
+            monthTable: dateCurrent,
+            itensTable: [],
+            periodsItens: [{
+                id: "",
+                periods: {
+                    type: "",
+                    days: []
+                }
+            }]
+        }
+        this._tables.push(newTable)
+    }
+
     updateTables(currentDate: string, currentTable: IObjectTable) {
-        // if(this.tables[0].id = "0"){
-        //     this._tables = [currentTable]
-        // }
         this._tables.splice(this.indexCurrentTable(currentDate), 1)
         this._tables.push(currentTable)
     }
@@ -23,10 +40,13 @@ export class Tables {
         return this._tables
     }
 
-    highestIndex(): number {
-        try{
-            this._tables.sort((a, b) => parseFloat(a.id) - parseFloat(b.id))
-            const lastIndex = this._tables[this._tables.length - 1].id
+    highestId(): number {
+        const realTables = this._tables.filter(table => table.id !== "0")
+        try {
+            realTables.sort((a, b) => parseFloat(a.id) - parseFloat(b.id))
+            console.log(realTables);
+            
+            const lastIndex = realTables[realTables.length - 1].id
             return parseFloat(lastIndex)
         } catch {
             return 0

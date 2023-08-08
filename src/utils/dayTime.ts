@@ -1,25 +1,28 @@
 export function dayTime(arg = "0") {
-    
     const someMonths = parseFloat(arg)
     const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
     let month = 0
-    let yearSome = 0
+    let yearSum = 0
     
     month = new Date().getMonth()
+    month += someMonths 
     
-    month += someMonths
-    
+    const monthYearFixed = fixMontYear(month)
+    month = monthYearFixed[0]
+    yearSum = monthYearFixed[1]
+
+    const year = (new Date().getFullYear()) + yearSum
+    return `${months[month]} ${year}`
+}
+export function fixMontYear(month: number){
+    let yearSum = 0
     if(month>11){
         while (month > 11) {
-            yearSome = Math.floor(month / 12)
+            yearSum = Math.floor(month / 12)
             month = month % 12
         }
-        
-        month = 0 + month
     }
-    const year = new Date().getFullYear() + yearSome
-
-    return `${months[month]} ${year}`
+    return [month, yearSum]
 }
 export function returnMonthYear(monthYear: string){
     const string = monthYear.split(" ")
@@ -37,5 +40,3 @@ export function daysOnMonth(month: string, year: string) {
     var data = new Date(parseFloat(year), monthNumber + 1, 0);
     return data.getDate();
 }
-
-

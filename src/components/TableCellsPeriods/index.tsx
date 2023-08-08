@@ -82,10 +82,37 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
         setAllTables(newObjects)
         LocalStorager.saveInformations(tables)
     }
+    function changeTypeInput(event: React.ChangeEvent<HTMLSelectElement>) {
+        setTypeCell(event.target.value)
+        const cellEdited = {
+            name: nameCell,
+            value: createFormatValue(valueCell, setValueCell),
+            installment: installmentCell,
+            repeat: repeatCell,
+            type: event.target.value,
+            paid: paidCell,
+            id: idCell
+        }
+        const indexObjectCurrent = tables.findIndex(object => object.monthTable === currentTable.monthTable)
+        const idObjectCurrent = currentTable.itensTable.findIndex(item => item.id === idCell)
+        const newObjects = [...tables]
+        
+        
+        newObjects[indexObjectCurrent].itensTable[idObjectCurrent] = cellEdited
+        setAllTables(newObjects)
+        LocalStorager.saveInformations(tables)
+    }
+    const optionsSelectInput = [
+        { label: "Despesas" },
+        { label: "Investimento" },
+        { label: "Beleza" },
+        { label: "Saúde" },
+        { label: "Outros" }
+    ]
     return (
         <>
             <div className="flex border-2 rounded-lg border-cor-secundaria py-1.5">
-                <div className="flex justify-center w-[16rem] border-gray-300 border-r-2">
+                <div className="flex justify-center w-[18rem] border-gray-300 border-r-2">
                     {!editButtonName ?
                         <div className="flex items-center justify-between pl-4 pr-3 w-full">
                             <p className='font-medium'>{nameCell}</p>
@@ -105,7 +132,7 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
                                 autoFocus={true}
                                 className='px-1 w-full font-medium placeholder:font-medium border-cor-outline'
                                 placeholder={nameCell}
-                                maxLength={16}
+                                maxLength={24}
                                 pattern={"^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$"}
                             />
                             <button
@@ -136,7 +163,7 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
                                 autoFocus={true}
                                 className='px-1 w-full font-medium placeholder:font-medium border-cor-outline'
                                 placeholder={valueCell}
-                                maxLength={9}
+                                maxLength={12}
                                 pattern={"^(\d+)(\,|\.)(\d{2})?$"}
                             />
                             <button
@@ -151,7 +178,7 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
                         <p className='font-medium'>{installmentCell}</p>
                     </div>
                 </div>
-                <div className="flex justify-center w-60 border-gray-300 border-r-2">
+                {/* <div className="flex justify-center w-60 border-gray-300 border-r-2">
                     {!editButtonType ?
                         <div className="flex items-center justify-between pl-4 pr-3 w-full">
                             <p className='font-medium'>{typeCell}</p>
@@ -180,6 +207,13 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
                                 <FaCheck size={14} />
                             </button>
                         </form>}
+                </div> */}
+                <div className='flex justify-start pl-4 w-48 border-gray-300 border-r-2'>
+                    <select onChange={event => changeTypeInput(event)} value={typeCell} className="w-40 font-medium">
+                        {optionsSelectInput.map((option, index) =>
+                            <option key={index} className="font-medium">{option.label}</option>
+                        )}
+                    </select>
                 </div>
                 <div className='w-24'>
                 </div>

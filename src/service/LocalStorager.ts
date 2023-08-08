@@ -1,5 +1,6 @@
 import { IObjectTable } from "../shared/IObjectTable"
 import { dayTime } from "../utils/dayTime"
+import deleteTablesUnused from "../utils/deleteTablesUnused"
 
 export abstract class LocalStorager {
     static getInformations() {
@@ -18,13 +19,6 @@ export abstract class LocalStorager {
           }]
     }
     static saveInformations(localStorager: IObjectTable[]) {
-        const tables = [...localStorager]
-        let index = tables.findIndex(item => item.itensTable[0] == undefined)
-
-        while (!(index == -1)) {
-            tables.splice(index, 1)
-            index = tables.findIndex(item => item.itensTable[0] == undefined)
-        }
-        return localStorage.setItem("Tables", JSON.stringify(tables))
+        return localStorage.setItem("Tables", JSON.stringify(deleteTablesUnused(localStorager)))
     }
 }

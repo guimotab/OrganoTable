@@ -7,17 +7,20 @@ import { IdTable } from '../../utils/IdTables'
 import { CurrentTable } from '../../models/CurrentTable'
 import { Tables } from '../../models/Tables'
 import { ITableItens } from '../../shared/ITableItens'
+import { createOthersInstallments } from '../../utils/installmentOrganizer'
+import { log } from 'console'
 
 interface PopUpProps {
     table: IObjectTable
     dateCurrent: string
     tables: IObjectTable[]
     expensesPeriodItens: string[]
+    setMouseOutPopUp: React.Dispatch<React.SetStateAction<boolean>>
     setExpensesPeriodItens: React.Dispatch<React.SetStateAction<string[]>>
     hidden: () => void
     setTables: React.Dispatch<React.SetStateAction<IObjectTable[]>>
 }
-const PopUpNewCell = ({ table, hidden, dateCurrent, tables, expensesPeriodItens, setExpensesPeriodItens, setTables }: PopUpProps) => {
+const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, expensesPeriodItens, setExpensesPeriodItens, setTables }: PopUpProps) => {
     const currentTable = new CurrentTable(table)
     const allTables = new Tables(tables)
 
@@ -30,6 +33,7 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, expensesPeriodItens,
 
     const [typeRepeat, setTypeRepeat] = useState("")
     const [daysRepeat, setDaysRepeat] = useState<string[]>([])
+
 
     function constructObjectPeriodItens(idTable: number, idItens: number) {
         if (repeat) {
@@ -59,9 +63,7 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, expensesPeriodItens,
         currentTable.itensTable = [newCell]
         allTables.updateTables(dateCurrent, currentTable.getInformations())
         const novaTable = [...allTables.tables]
-
         setTables(novaTable)
-
         LocalStorager.saveInformations(tables)
     }
     function submitForm(event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent> | React.FormEvent<HTMLButtonElement>) {
@@ -84,10 +86,14 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, expensesPeriodItens,
                 paid: false,
                 id: `${currentTable.id}.${parseFloat(IdTable.returnIdCell(lastIdCell)) + 1}`
             }
+
+            if (parseFloat(valueInstallment) > 1) {
+                createOthersInstallments(valueInstallment, currentTable, allTables, newCell);
+            }
             saveNewInformations(newCell)
         } else {
             // cria currentTable inicial
-            const lastIdTable = allTables.highestIndex()
+            const lastIdTable = allTables.highestId()
             currentTable.id = `${lastIdTable + 1}`
             constructObjectPeriodItens(parseFloat(currentTable.id), 0)
             const newCell = {
@@ -99,17 +105,23 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, expensesPeriodItens,
                 paid: false,
                 id: `${currentTable.id}.0`
             }
+            if (parseFloat(valueInstallment) > 1) {
+                createOthersInstallments(valueInstallment, currentTable, allTables, newCell);
+            }
             saveNewInformations(newCell)
         }
     }
     function changeDaysRepeat(event: React.ChangeEvent<HTMLInputElement>, day: string) {
         const daysArray = [...daysRepeat]
-        daysArray.push(day)
-        setDaysRepeat(daysArray)
-        if (!event.target.checked) {
+        if (event.target.checked) {
+            daysArray.push(day)
+            setDaysRepeat(daysArray)
+            console.log(daysArray);
+        } else {
             const index = daysArray.findIndex(element => element === day)
             daysArray.splice(index, 1)
             setDaysRepeat(daysArray)
+            console.log(daysArray);
         }
     }
     function transformValueInput(event: React.FocusEvent<HTMLInputElement, Element>) {
@@ -150,13 +162,6 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, expensesPeriodItens,
             onChange: setValue,
             onBlur: transformValueInput,
             pattern: "^(\d+)((\,|\.)\d{2})?$",
-            required: true,
-        }, {
-            label: "Tipo:",
-            type: "text",
-            value: type,
-            onChange: setType,
-            pattern: "^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$",
             required: true,
         }
     ]
@@ -203,8 +208,31 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, expensesPeriodItens,
             onclick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => changeTypeRepeat("Anualmente")
         },
     ]
+    const optionsSelectInput = [
+        { label: "Despesas" },
+        { label: "Investimento" },
+        { label: "Beleza" },
+        { label: "Saúde" },
+        { label: "Outros" }
+    ]
+    const installmentSelectInput = [
+        { label: "1/2" },
+        { label: "1/3" },
+        { label: "1/4" },
+        { label: "1/5" },
+        { label: "1/6" },
+        { label: "1/7" },
+        { label: "1/8" },
+        { label: "1/9" },
+        { label: "1/10" },
+        { label: "1/11" },
+        { label: "1/12" }
+    ]
     return (
-        <div className="absolute bg-cor-secundaria py-3 h-fit w-[34rem] top-48 left-[48rem]">
+        <div
+            onMouseLeave={() => setMouseOutPopUp(true)}
+            onMouseEnter={() => setMouseOutPopUp(false)}
+            className="absolute bg-cor-secundaria py-3 h-fit w-[34rem] top-36 left-[46rem]">
             <div>
                 <button onClick={() => hidden()} className='flex mx-2 px-2.5 text-black font-medium rounded-lg bg-white'>X</button>
             </div>
@@ -222,6 +250,14 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, expensesPeriodItens,
                     required={input.required}
                     tagP={input.tagP}
                 />)}
+                <div className='flex items-center justify-between gap-2 ml-5 mr-5 px-2 '>
+                    <label className='text-white font-medium'>Tipo: </label>
+                    <select onChange={event => setType(event.target.value)}>
+                        {optionsSelectInput.map((option, index) =>
+                            <option key={index}>{option.label}</option>
+                        )}
+                    </select>
+                </div>
                 <div className='flex gap-1 ml-5 mr-8 px-2'>
                     <label className='text-white font-medium'>Parcelado</label>
                     <input
@@ -230,16 +266,22 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, expensesPeriodItens,
                     />
                 </div>
                 {installment ?
-                    <FormInput
-                        key={5}
-                        label="Parcelas:"
-                        type="number"
-                        minLength={2}
-                        maxLength={12}
-                        value={valueInstallment}
-                        onChange={setValueInstallment}
-                        required={true}
-                    /> : <></>
+                    <select onChange={event => ""} className='w-24 font-medium'>
+                        {installmentSelectInput.map((option, index) =>
+                            <option key={index} className='font-medium'>{option.label}</option>
+                        )}
+                    </select>
+                    // <FormInput
+                    //     key={5}
+                    //     label="Parcelas:"
+                    //     type="number"
+                    //     minLength={2}
+                    //     maxLength={12}
+                    //     value={valueInstallment}
+                    //     onChange={setValueInstallment}
+                    //     required={true}
+                    // /> 
+                    : <></>
                 }
                 <div className='flex gap-1 ml-5 mr-8 px-2'>
                     <label className='text-white font-medium'>Repetir</label>

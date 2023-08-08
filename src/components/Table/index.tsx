@@ -56,7 +56,7 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
     function renderCells(table: ITableItens, index: number) {
         //  return <></>
         const [idTable, idItens] = [parseFloat(IdTable.returnIdTable(table.id)), parseFloat(IdTable.returnIdCell(table.id))]
-
+        
         if (!table.repeat) {
             return <TableCells
                 key={`${idTable}${idItens}`}
@@ -127,18 +127,19 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
         return salaryFloat
     }
     const titleTr = [
-        { name: "Nome", width: "flex text-gray-600 justify-start w-[16rem] font-medium pl-2" },
-        { name: "Valor", width: "flex text-gray-600 justify-start w-60 font-medium pl-2" },
-        { name: "Parcela", width: "flex text-gray-600 justify-start w-32 font-medium pl-2" },
-        { name: "Tipo", width: "flex text-gray-600 justify-start w-60 font-medium pl-2" },
-        { name: "Pago", width: "flex text-gray-600 justify-start w-24 font-medium pl-1" },
+        { name: "Nome", width: "flex text-gray-600 justify-start w-[18rem] font-medium pl-3" },
+        { name: "Valor", width: "flex text-gray-600 justify-start w-60 font-medium pl-3" },
+        { name: "Parcela", width: "flex text-gray-600 justify-start w-32 font-medium pl-3" },
+        { name: "Tipo", width: "flex text-gray-600 justify-start w-48 font-medium pl-3" },
+        { name: "Pago", width: "flex text-gray-600 justify-start w-24 font-medium pl-2" },
     ]
+    
     return (
-        <div className='w-full'>
+        <div className=' w-full'>
             {itensTable.itensTable ?
                 <div className='flex flex-col gap-1 w-full'>
                     <div className='flex flex-col gap-2'>
-                        <div className='flex justify-between h-fit'>
+                        <div className='flex justify-between h-fit pr-2'>
                             <TableTitle
                                 name={currentTable.monthTable}
                                 setExpenseClass={setExpenseClass}
@@ -148,7 +149,7 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
                             <CreateCell onClick={onClick} />
                         </div>
                         <div className='flex flex-col gap-1 w-full scrollbar'>
-                            <div className='flex justify-between pr-4 py-1'>
+                            <div className='flex pr-4 py-1'>
                                 {titleTr.map((title, index) => <div className={title.width} key={index}>{title.name}</div>)}
                             </div>
                             <section className='flex flex-col pr-2 gap-1 max-h-[21rem] overflow-auto '>
@@ -158,7 +159,9 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
                             </section>
                         </div>
                     </div>
-                    <ResultOnMonth resultOnMonth={resultOnMonth()} />
+                    <div className='pr-2'>
+                        <ResultOnMonth resultOnMonth={resultOnMonth()} />
+                    </div>
                 </div>
                 :
                 <>
