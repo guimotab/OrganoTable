@@ -4,4 +4,5 @@ export default interface IPeriodsItens{
         type: string
         days?: string[]
     }
+    lastMonthYear: string
 }

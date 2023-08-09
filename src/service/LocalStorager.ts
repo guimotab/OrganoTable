@@ -9,14 +9,16 @@ export abstract class LocalStorager {
             salary: "",
             monthTable: dayTime(),
             itensTable: [],
+            highestIdInstallment: "",
             periodsItens: [{
               id: "",
               periods: {
                 type: "",
-                days: []
-              }
+                days: [],
+              },
+              lastMonthYear: ""
             }]
-          }]
+          }] as IObjectTable[]
     }
     static saveInformations(localStorager: IObjectTable[]) {
         return localStorage.setItem("Tables", JSON.stringify(deleteTablesUnused(localStorager)))

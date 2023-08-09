@@ -8,7 +8,7 @@ import ResultOnMonth from '../ResultOnMonth/ResultOnMonth'
 import { CurrentTable } from '../../models/CurrentTable'
 import IPeriodsItens from '../../shared/IPeriodsItens'
 import { IdTable } from '../../utils/IdTables'
-import { returnMonthYear } from '../../utils/dayTime'
+import { findMonth, returnMonthYear } from '../../utils/dayTime'
 import { showValue } from '../../utils/createFormatValue'
 import TableCellsPeriods from '../TableCellsPeriods'
 import { Expenses } from '../../models/Expenses'
@@ -46,7 +46,7 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
 
     function updateTables(event: React.ChangeEvent<HTMLInputElement>) {
         const idElement = parseFloat(event.target.id)
-        const newObjects = [...tables, currentTable]
+        const newObjects = [...tables, currentTable.getInformations()]
         setTables(tables.splice(indexCurrentTable, 1))
         currentTable.itensTable[idElement].paid = event.target.checked
         setTables([...newObjects])
@@ -75,25 +75,40 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
         }
     }
 
-    function renderEspecialCells(idPeriodItens: string, index: number, itens: IPeriodsItens) {
+    function renderEspecialCells(idPeriodItens: string, index: number, itens: IPeriodsItens){
+        function isBefore(){
+            const [currentMonth, currentYear] = returnMonthYear(currentTable.monthTable)
+            const currentMonthNumber = findMonth(currentMonth)
+            const [itemMonth, itemYear] = returnMonthYear(tableItem.monthTable)
+            const itemMonthNumber = findMonth(itemMonth)
+            const itemMonthYear = new Date(`01/${itemMonthNumber + 1}/${itemYear}`)
+            const CurrentTableMonthYear = new Date(`01/${currentMonthNumber + 1}/${currentYear}`)
+            if(itemMonthYear <= CurrentTableMonthYear){
+                return false 
+            } else {
+                return true
+            }
+        }
         const [idTable, idItens] = [parseFloat(IdTable.returnIdTable(idPeriodItens)), parseFloat(IdTable.returnIdCell(idPeriodItens))]
         const findIdTable = tables.findIndex(table => table.id === `${idTable}`)
         const findIdItem = tables[findIdTable].itensTable.findIndex(item => item.id === `${idTable}.${idItens}`)
         const item = tables[findIdTable].itensTable[findIdItem]
+        const tableItem = tables[findIdTable]
 
-        let isAnnual = true
-        if (itens.periods.type === "Anualmente") {
-            const [monthItem, yearItem] = returnMonthYear(tables[findIdTable].monthTable)
-            const [monthCurrent, yearCurrent] = returnMonthYear(currentTable.monthTable)
-            if (monthItem !== monthCurrent) {
-                isAnnual = false
+        if (!isBefore()) {
+
+            let isAnnual = true
+            if (itens.periods.type === "Anualmente") {
+                const [monthItem, yearItem] = returnMonthYear(tables[findIdTable].monthTable)
+                const [monthCurrent, yearCurrent] = returnMonthYear(currentTable.monthTable)
+                if (monthItem !== monthCurrent) {
+                    isAnnual = false
+                }
             }
-        }
 
-        const valueOfCell = () => showValue(item.value, itens.periods.type, currentTable.monthTable, itens.periods.days)
-        if (item && isAnnual) {
-            // setExpensesPeriodItens(expensesArrayPeriodItens)
-            return <TableCellsPeriods
+            const valueOfCell = () => showValue(item.value, itens.periods.type, currentTable.monthTable, itens.periods.days)
+            if (item && isAnnual) {
+                return <TableCellsPeriods
                     key={`${idTable + 1}${idItens}`}
                     name={item.name}
                     value={valueOfCell()}
@@ -110,6 +125,7 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
                     setAllTables={setTables}
                     setAllert={setAllert}
                 />
+            }
         }
     }
     function resultOnMonth() {
@@ -150,7 +166,6 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
                                 {titleTr.map((title, index) => <div className={title.width} key={index}>{title.name}</div>)}
                             </div>
                             <section className='flex flex-col pr-2 gap-1 max-h-[21rem] overflow-auto '>
-                                {/* {optionsButtons? <div className='relative right-7 text-black'>oi</div>: <></>} */}
                                 {itensTable.itensTable.map((table: ITableItens, index) => renderCells(table, index))}
                                 {periodItens.map((itens, index) => renderEspecialCells(itens.id, index, itens))}
                             </section>

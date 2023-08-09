@@ -6,5 +6,6 @@ export interface IObjectTable {
     monthTable:string,
     salary: string,
     itensTable: ITableItens[],
+    highestIdInstallment: string
     periodsItens: IPeriodsItens[] | undefined
 }

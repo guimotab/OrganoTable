@@ -6,8 +6,10 @@ import { IObjectTable } from "../../shared/IObjectTable"
 import { BiEditAlt } from "react-icons/bi"
 import { FaCheck } from "react-icons/fa"
 import { Expenses } from "../../models/Expenses"
+import { BsTrash3Fill } from "react-icons/bs"
+import WarningDeleteCell from "../WarningDeleteCell"
 
-interface TableCellsPeriodProps{
+interface TableCellsPeriodProps {
     name: string
     value: string
     installment: string
@@ -24,13 +26,12 @@ interface TableCellsPeriodProps{
     setAllert: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, expenseClass, expensesPeriodItens, setExpensesPeriodItens, table, tables, setAllTables, setAllert}: TableCellsPeriodProps) => {
+const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, expenseClass, expensesPeriodItens, setExpensesPeriodItens, table, tables, setAllTables, setAllert }: TableCellsPeriodProps) => {
     const currentTable = new CurrentTable(table)
-    
+
     const [editButtonName, setEditButtonName] = useState(false)
     const [editButtonValue, setEditButtonValue] = useState(false)
-    const [editButtonType, setEditButtonType] = useState(false)
-    
+
     const [nameCell, setNameCell] = useState(name)
     const [valueCell, setValueCell] = useState(value)
     const [installmentCell, setInstallmentCell] = useState(installment)
@@ -38,8 +39,11 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
     const [typeCell, setTypeCell] = useState(type)
     const [paidCell, setPaidCell] = useState(paid)
     const [idCell, setIdCell] = useState(id)
-    
-    useEffect(()=>{
+
+    const [optionsButtons, setOptionsButtons] = useState(false)
+    const [showWarningDelete, setShowWarningDelete] = useState(false)
+
+    useEffect(() => {
         setNameCell(name)
         setValueCell(value)
         setInstallmentCell(installment)
@@ -47,13 +51,13 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
         setTypeCell(type)
         setPaidCell(paid)
         setIdCell(id)
-    },[name, value, installment, repeat, type, paid, id])
-    
-    useEffect(()=>{
+    }, [name, value, installment, repeat, type, paid, id])
+
+    useEffect(() => {
         expenseClass.expenses = [value]
         expenseClass.setExpensesPeriodItens(setExpensesPeriodItens)
-    },[table.monthTable])
-    
+    }, [table.monthTable])
+
     function onStartEditCell(setEditButton: React.Dispatch<React.SetStateAction<boolean>>) {
         setEditButton(true)
         setAllert(true)
@@ -61,9 +65,9 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
     function onEndEditCell(event: React.FormEvent<HTMLFormElement>, setEditButton: React.Dispatch<React.SetStateAction<boolean>>) {
         event.preventDefault()
         setAllert(false)
-        
+
         setEditButton(false)
-        
+
         const cellEdited = {
             name: nameCell,
             value: createFormatValue(valueCell, setValueCell),
@@ -77,7 +81,7 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
         const indexObjectCurrent = tables.findIndex(object => object.monthTable === currentTable.monthTable)
         const idObjectCurrent = currentTable.itensTable.findIndex(item => item.id === idCell)
         const newObjects = [...tables]
-        
+
         newObjects[indexObjectCurrent].itensTable[idObjectCurrent] = cellEdited
         setAllTables(newObjects)
         LocalStorager.saveInformations(tables)
@@ -96,8 +100,8 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
         const indexObjectCurrent = tables.findIndex(object => object.monthTable === currentTable.monthTable)
         const idObjectCurrent = currentTable.itensTable.findIndex(item => item.id === idCell)
         const newObjects = [...tables]
-        
-        
+
+
         newObjects[indexObjectCurrent].itensTable[idObjectCurrent] = cellEdited
         setAllTables(newObjects)
         LocalStorager.saveInformations(tables)
@@ -111,9 +115,42 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
     ]
     return (
         <div className="flex">
-            <div className="w-24">
-            </div>
-            <div className="flex flex-grow border-2 rounded-lg border-cor-secundaria py-1.5">
+            {optionsButtons ?
+                <div className='flex flex-col justify-center'>
+                    <div className='flex justify-end pr-3 w-24 gap-2'
+                        onMouseEnter={event => setOptionsButtons(true)}
+                        onMouseLeave={event => setOptionsButtons(false)}>
+                        {/* <IoMdInformationCircle
+                            size={25}
+                            className='text-cor-terciaria hover:text-cor-hover'
+                        /> */}
+                        <BsTrash3Fill
+                            size={25}
+                            className='text-cor-terciaria hover:text-cor-erro pb-1'
+                            onClick={event => setShowWarningDelete(true)}
+                            onMouseLeave={event => setShowWarningDelete(false)}
+                        />
+                    </div>
+                    {showWarningDelete ?
+                        <WarningDeleteCell
+                            id={idCell}
+                            repeat={repeatCell}
+                            textP={"Você deseja excluir:"}
+                            table={table}
+                            tables={tables}
+                            setTables={setAllTables}
+                            setOptionsButtons={setOptionsButtons}
+                            setShowWarningDelete={setShowWarningDelete}
+                        />
+                        : <></>
+                    }
+                </div>
+                :
+                <div className='w-24'></div>
+            }
+            <div className="flex flex-grow border-2 rounded-lg border-cor-secundaria py-1.5"
+                onMouseEnter={event => setOptionsButtons(true)}
+                onMouseLeave={event => setOptionsButtons(false)}>
                 <div className="flex justify-center w-[18rem] border-gray-300 border-r-2">
                     {!editButtonName ?
                         <div className="flex items-center justify-between pl-4 pr-3 w-full">

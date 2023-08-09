@@ -48,7 +48,8 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, ex
                         periods: {
                             type: typeRepeat,
                             days: daysRepeat
-                        }
+                        },
+                        lastMonthYear: ""
                     }]
                     setTypeRepeat("")
                     setDaysRepeat([])
@@ -60,6 +61,24 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, ex
             setTypeRepeat("")
             setDaysRepeat([])
         }
+    }
+    function constructNewCell(lastIdCell: number) {
+        let newCell
+        const secondId = lastIdCell
+        let idInstallment = ""
+        if (parseFloat(valueInstallment) > 1) {
+            idInstallment = `-${currentTable.id}P${secondId}`
+        }
+        newCell = {
+            name: name,
+            value: createFormatValue(value),
+            installment: `1/${valueInstallment}`,
+            repeat: repeat,
+            type: type,
+            paid: false,
+            id: `${currentTable.id}.${secondId}${idInstallment}`
+        }
+        return newCell
     }
     function saveNewInformations(newCell: ITableItens) {
         currentTable.itensTable = [newCell]
@@ -78,16 +97,7 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, ex
             const idItens = parseFloat(IdTable.returnIdCell(lastIdCell)) + 1
 
             constructObjectPeriodItens(parseFloat(currentTable.id), idItens)
-
-            const newCell = {
-                name: name,
-                value: createFormatValue(value),
-                installment: `1/${valueInstallment}`,
-                repeat: repeat,
-                type: type,
-                paid: false,
-                id: `${currentTable.id}.${parseFloat(IdTable.returnIdCell(lastIdCell)) + 1}`
-            }
+            const newCell = constructNewCell(parseFloat(IdTable.returnIdCell(lastIdCell)) + 1)
 
             if (parseFloat(valueInstallment) > 1) {
                 createOthersInstallments(valueInstallment, currentTable, allTables, newCell);
@@ -97,16 +107,10 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, ex
             // cria currentTable inicial
             const lastIdTable = allTables.highestId()
             currentTable.id = `${lastIdTable + 1}`
+
             constructObjectPeriodItens(parseFloat(currentTable.id), 0)
-            const newCell = {
-                name: name,
-                value: createFormatValue(value),
-                installment: `1/${valueInstallment}`,
-                repeat: repeat,
-                type: type,
-                paid: false,
-                id: `${currentTable.id}.0`
-            }
+            const newCell = constructNewCell(0)
+
             if (parseFloat(valueInstallment) > 1) {
                 createOthersInstallments(valueInstallment, currentTable, allTables, newCell);
             }
@@ -118,12 +122,10 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, ex
         if (event.target.checked) {
             daysArray.push(day)
             setDaysRepeat(daysArray)
-            console.log(daysArray);
         } else {
             const index = daysArray.findIndex(element => element === day)
             daysArray.splice(index, 1)
             setDaysRepeat(daysArray)
-            console.log(daysArray);
         }
     }
     function transformValueInput(event: React.FocusEvent<HTMLInputElement, Element>) {
@@ -144,21 +146,12 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, ex
             setTypeRepeat(type)
         }
     }
-    function changeInstallment() {
-        if (!installment) {
-            setValueInstallment("2")
-        } else if (installment) {
-            setValueInstallment("1")
-        }
-        setCheckInstallment(!checkInstallment)
-        setInstallment(!installment)
-    }
     function changeRepeat() {
         setRepeat(!repeat)
         setCheckRepeat(!checkRepeat)
     }
     function changeValueInstallment(event: React.ChangeEvent<HTMLSelectElement>) {
-        if(event.target.value !== "1/1"){
+        if (event.target.value !== "1/1") {
             setCheckInstallment(true)
         } else {
             setCheckInstallment(false)
@@ -240,8 +233,8 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, ex
         { label: "Saúde" },
         { label: "Outros" }
     ]
-    let installmentSelectInput 
-    if(checkRepeat){
+    let installmentSelectInput
+    if (checkRepeat) {
         installmentSelectInput = [
             { label: "1/1" }
         ]
@@ -317,6 +310,7 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, ex
                         <div className='flex mx-7 justify-between'>
                             {buttonPeriods.map((button, index) =>
                                 <button
+                                    key={index}
                                     onClick={event => changeTypeRepeat(button.label)}
                                     className={button.className}>
                                     {button.label}

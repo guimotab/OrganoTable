@@ -6,6 +6,7 @@ import { IdTable } from "./IdTables";
 import { findMonth, fixMontYear, returnMonthYear } from "./dayTime";
 
 export function createOthersInstallments(installment: string, currentTable: CurrentTable, allTables: Tables, newCell: INewCell) {
+    const idOriginalTable = `-${newCell.id.split("-")[1]}`
     const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
     const installmentNumber = parseFloat(installment)
     const [month, year] = returnMonthYear(currentTable.monthTable)
@@ -22,13 +23,13 @@ export function createOthersInstallments(installment: string, currentTable: Curr
                 const lastCell = thisTable.itensTable.length - 1
                 const idLastCell = thisTable.itensTable[lastCell].id
                 newCellTable.installment = `${i + 1}/${installmentNumber}`
-                newCellTable.id = `${thisTable.id}.${parseFloat(IdTable.returnIdCell(idLastCell)) + 1}`
+                newCellTable.id = `${thisTable.id}.${parseFloat(IdTable.returnIdCell(idLastCell)) + 1}${idOriginalTable}`
                 allTables.tables[existTable].itensTable.push(newCellTable.returnInformations())
             } else { //se não possui primeiro elemento
                 const lastId = allTables.highestId()
                 thisTable.id =`${lastId + 1}`
                 newCellTable.installment = `${i + 1}/${installmentNumber}`
-                newCellTable.id = `${thisTable.id}.0`
+                newCellTable.id = `${thisTable.id}.0${idOriginalTable}`
                 allTables.tables[existTable].itensTable.push(newCellTable.returnInformations())
             }
         } else if (!thisTable) {//se não existe alguma tabela igual mês
@@ -37,7 +38,7 @@ export function createOthersInstallments(installment: string, currentTable: Curr
             const indexThisTable = allTables.tables.findIndex(table => table.monthTable === `${thisMonthYear}`)
             const thisTable = allTables.tables[indexThisTable]
             newCellTable.installment = `${i + 1}/${installmentNumber}`
-            newCellTable.id = `${thisTable.id}.0`
+            newCellTable.id = `${thisTable.id}.0${idOriginalTable}`
             allTables.tables[indexThisTable].itensTable.push(newCellTable.returnInformations())
         }
     }

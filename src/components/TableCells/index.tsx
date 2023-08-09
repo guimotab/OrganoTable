@@ -6,6 +6,7 @@ import { CurrentTable } from '../../models/CurrentTable'
 import EditCell from '../EditCell'
 import { IoMdInformationCircle } from 'react-icons/io'
 import { BsTrash3Fill } from 'react-icons/bs'
+import WarningDeleteCell from '../WarningDeleteCell'
 
 
 interface TableCellsProps {
@@ -32,9 +33,7 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, table, t
     const [editButtonName, setEditButtonName] = useState(0)
     const [editButtonValue, setEditButtonValue] = useState(0)
     const [optionsButtons, setOptionsButtons] = useState(false)
-
-    // const [editButtonInstallment, setEditButtonInstallment] = useState(0)
-    // const [editButtonType, setEditButtonType] = useState(0)
+    const [showWarningDelete, setShowWarningDelete] = useState(false)
 
     const [nameCell, setNameCell] = useState(name)
     const [valueCell, setValueCell] = useState(value)
@@ -132,13 +131,6 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, table, t
         LocalStorager.saveInformations(tables)
     }
 
-    function showOptionsButton() {
-        setOptionsButtons(true)
-    }
-    function hideOptionsButton() {
-        setOptionsButtons(false)
-    }
-
     const editButtons = [
         {
             classDiv: "flex justify-center w-[18rem] border-gray-300 border-r-2",
@@ -185,15 +177,41 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, table, t
     return (
         <div className='flex'>
             {optionsButtons ?
-                <div className='flex justify-end items-center pr-3 w-24 gap-2'
-                    onMouseEnter={event => showOptionsButton()}
-                    onMouseLeave={event => hideOptionsButton()}>
-                    <IoMdInformationCircle size={25} className='text-cor-terciaria hover:text-cor-hover'/>
-                    <BsTrash3Fill size={21} className='text-cor-terciaria hover:text-cor-erro'/>
-                </div> : <div className='w-24'></div>
+                <div className='flex flex-col justify-center'>
+                    <div className='flex justify-end pr-3 w-24 gap-2'
+                        onMouseEnter={event => setOptionsButtons(true)}
+                        onMouseLeave={event => setOptionsButtons(false)}>
+                        {/* <IoMdInformationCircle
+                            size={25}
+                            className='text-cor-terciaria hover:text-cor-hover'
+                        /> */}
+                        <BsTrash3Fill
+                            size={25}
+                            className='text-cor-terciaria hover:text-cor-erro pb-1'
+                            onClick={event => setShowWarningDelete(true)}
+                            onMouseLeave={event => setShowWarningDelete(false)}
+                        />
+                    </div>
+                    {showWarningDelete ?
+                        <WarningDeleteCell
+                            id={idCell}
+                            textP={"Você tem certeza?"}
+                            table={table}
+                            tables={tables}
+                            setTables={setAllTables}
+                            setOptionsButtons={setOptionsButtons}
+                            setShowWarningDelete={setShowWarningDelete}
+                        />
+                        : <></>
+                    }
+                </div>
+                :
+                <div className='w-24'></div>
             }
-            <div className='flex flex-grow border-2 rounded-lg border-cor-secundaria py-1.5' onMouseEnter={event => showOptionsButton()}
-                onMouseLeave={event => hideOptionsButton()}>
+            <div
+                className='flex flex-grow border-2 rounded-lg border-cor-secundaria py-1.5'
+                onMouseEnter={event => setOptionsButtons(true)}
+                onMouseLeave={event => setOptionsButtons(false)}>
                 {editButtons.map((button, index) =>
                     <div className={button.classDiv} key={index}>
                         <EditCell

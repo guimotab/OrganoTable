@@ -28,21 +28,22 @@ function App() {
   if (tables[indexCurrentTable]) {
     currentTable = tables[indexCurrentTable]
   } else {
-    const lastIndexTable = parseFloat(tables[tables.length - 1].id)
     currentTable =
     {
-      id: `${0}`,
+      id: "0",
       salary: "",
       monthTable: dateCurrent,
       itensTable: [],
+      highestIdInstallment:"",
       periodsItens: [{
         id: "",
         periods: {
           type: "",
           days: []
-        }
+        },
+        lastMonthYear: ""
       }]
-    }
+    } as IObjectTable
     const allTables = [...deleteTablesUnused(tables)]
     allTables.push(currentTable)
     setTables(allTables)
@@ -69,7 +70,6 @@ function App() {
           <div className='pl-24'>
             <InputSalary table={currentTable} tables={tables} dateCurrent={dateCurrent} setTables={setTables} />
           </div>
-          
           <Table
             table={currentTable}
             tables={tables}
@@ -79,7 +79,6 @@ function App() {
             setTables={setTables}
             setDateCurrent={setDateCurrent}
             onClick={newCell} />
-
         </div>
         {showPopUp ? <PopUpNewCell
           dateCurrent={dateCurrent}

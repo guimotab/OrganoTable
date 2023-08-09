@@ -10,8 +10,6 @@ export class Tables {
     }
 
     createNewTable(dateCurrent: string) {
-        
-        console.log(this.highestId());
         const newIdTable = this.highestId() + 1
         
         const newTable = {
@@ -19,14 +17,16 @@ export class Tables {
             salary: "",
             monthTable: dateCurrent,
             itensTable: [],
+            highestIdInstallment: "",
             periodsItens: [{
                 id: "",
                 periods: {
                     type: "",
                     days: []
-                }
+                },
+                lastMonthYear:""
             }]
-        }
+        } as IObjectTable
         this._tables.push(newTable)
     }
 
