@@ -1,12 +1,24 @@
-import { table } from "console";
 import { IObjectTable } from "../shared/IObjectTable";
-import IPeriodsItens from "../shared/IPeriodsItens";
-import { ITableItens } from "../shared/ITableItens";
+import { dayTime } from "../utils/dayTime";
 
 export class Tables {
     private _tables: IObjectTable[]
     constructor(tables: IObjectTable[]) {
-        this._tables = tables
+        this._tables = tables || [{
+            id: `0`,
+            salary: "",
+            monthTable: dayTime(),
+            itensTable: [],
+            highestIdInstallment: "",
+            periodsItens: [{
+                id: "",
+                periods: {
+                    type: "",
+                    days: []
+                },
+                lastMonthYear:""
+            }]
+        }] as IObjectTable[]
     }
 
     createNewTable(dateCurrent: string) {

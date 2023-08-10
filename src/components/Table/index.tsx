@@ -8,7 +8,7 @@ import ResultOnMonth from '../ResultOnMonth/ResultOnMonth'
 import { CurrentTable } from '../../models/CurrentTable'
 import IPeriodsItens from '../../shared/IPeriodsItens'
 import { IdTable } from '../../utils/IdTables'
-import { findMonth, returnMonthYear } from '../../utils/dayTime'
+import { dayTime, findMonth, returnMonthYear } from '../../utils/dayTime'
 import { showValue } from '../../utils/createFormatValue'
 import TableCellsPeriods from '../TableCellsPeriods'
 import { Expenses } from '../../models/Expenses'
@@ -27,19 +27,15 @@ interface TableProps {
 const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick }: TableProps) => {
     const currentTable = new CurrentTable(table)
     const indexCurrentTable = tables.findIndex((table: IObjectTable) => table.monthTable === dateCurrent)
-
     const [expensesPeriodItens, setExpensesPeriodItens] = useState<string[]>([])
-
-    const [itensTable, setItensTable] = useState(currentTable.getInformations()) //tables[indexCurrentTable]
+    const [itensTable, setItensTable] = useState(currentTable.getInformations())
     const [periodItens, setPeriodItens] = useState<IPeriodsItens[]>([])
     const [allert, setAllert] = useState(false)
-
     const [expenseClass, setExpenseClass] = useState(new Expenses())
-
-
+    
     useEffect(() => {
         const arrayPeriods = [] as IPeriodsItens[]
-        tables.forEach(table => table.periodsItens![0].id === "" ? "" : arrayPeriods.push(...table.periodsItens!))
+        tables.forEach(table => table.periodsItens[0].id === "" ? "" : arrayPeriods.push(...table.periodsItens))
         setPeriodItens([...arrayPeriods])
         setItensTable(table)
     }, [table])
@@ -53,9 +49,7 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
     }
 
     function renderCells(table: ITableItens, index: number) {
-        //  return <></>
         const [idTable, idItens] = [parseFloat(IdTable.returnIdTable(table.id)), parseFloat(IdTable.returnIdCell(table.id))]
-
         if (!table.repeat) {
             return <TableCells
                 key={`${idTable}${idItens}`}
@@ -75,70 +69,80 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
         }
     }
 
-    function renderEspecialCells(idPeriodItens: string, index: number, itens: IPeriodsItens){
-        function isBefore(){
+    function renderEspecialCells(idPeriodItens: string, index: number, itens: IPeriodsItens) {
+        const [idTable, idItens] = [parseFloat(IdTable.returnIdTable(idPeriodItens)), parseFloat(IdTable.returnIdCell(idPeriodItens))]
+        const findIdTable = tables.findIndex(table => table.id === `${idTable}`)
+        const tableItem = tables[findIdTable]
+        function isBeforeCreation() {
             const [currentMonth, currentYear] = returnMonthYear(currentTable.monthTable)
             const currentMonthNumber = findMonth(currentMonth)
             const [itemMonth, itemYear] = returnMonthYear(tableItem.monthTable)
             const itemMonthNumber = findMonth(itemMonth)
             const itemMonthYear = new Date(`01/${itemMonthNumber + 1}/${itemYear}`)
             const CurrentTableMonthYear = new Date(`01/${currentMonthNumber + 1}/${currentYear}`)
-            if(itemMonthYear <= CurrentTableMonthYear){
-                return false 
+            if (itemMonthYear <= CurrentTableMonthYear) {
+                return false
             } else {
                 return true
             }
         }
-        const [idTable, idItens] = [parseFloat(IdTable.returnIdTable(idPeriodItens)), parseFloat(IdTable.returnIdCell(idPeriodItens))]
-        const findIdTable = tables.findIndex(table => table.id === `${idTable}`)
-        const findIdItem = tables[findIdTable].itensTable.findIndex(item => item.id === `${idTable}.${idItens}`)
-        const item = tables[findIdTable].itensTable[findIdItem]
-        const tableItem = tables[findIdTable]
-
-        if (!isBefore()) {
-
-            let isAnnual = true
-            if (itens.periods.type === "Anualmente") {
-                const [monthItem, yearItem] = returnMonthYear(tables[findIdTable].monthTable)
-                const [monthCurrent, yearCurrent] = returnMonthYear(currentTable.monthTable)
-                if (monthItem !== monthCurrent) {
-                    isAnnual = false
+        function limitOfDeleteMonthYear() {
+            if (itens.lastMonthYear !== "") {
+                const [itensMonth, itensYear] = returnMonthYear(itens.lastMonthYear)
+                const itensMonthNumber = findMonth(itensMonth)
+                const [currentMonth, currentYear] = returnMonthYear(currentTable.monthTable)
+                const currentMonthNumber = findMonth(currentMonth)
+                const itemMonthYear = new Date(`01/${itensMonthNumber + 1}/${itensYear}`)
+                const currentMonthYear = new Date(`01/${currentMonthNumber + 1}/${currentYear}`)
+                if (itemMonthYear > currentMonthYear) {
+                    return false
+                } else {
+                    return true
                 }
+            } else {
+                return false
             }
+        }
+        if (tableItem) {
+            const findIdItem = tableItem.itensTable.findIndex(item => item.id === `${idTable}.${idItens}`)
+            const item = tableItem.itensTable[findIdItem]
 
-            const valueOfCell = () => showValue(item.value, itens.periods.type, currentTable.monthTable, itens.periods.days)
-            if (item && isAnnual) {
-                return <TableCellsPeriods
-                    key={`${idTable + 1}${idItens}`}
-                    name={item.name}
-                    value={valueOfCell()}
-                    installment={item.installment}
-                    type={item.type}
-                    paid={item.paid}
-                    id={item.id}
-                    repeat={item.repeat}
-                    expenseClass={expenseClass}
-                    expensesPeriodItens={expensesPeriodItens}
-                    setExpensesPeriodItens={setExpensesPeriodItens}
-                    table={currentTable.getInformations()}
-                    tables={tables}
-                    setAllTables={setTables}
-                    setAllert={setAllert}
-                />
+            if (!isBeforeCreation() && !limitOfDeleteMonthYear()) {
+
+                let isAnnual = true
+                if (itens.periods.type === "Anualmente") {
+                    const [monthItem, yearItem] = returnMonthYear(tables[findIdTable].monthTable)
+                    const [monthCurrent, yearCurrent] = returnMonthYear(currentTable.monthTable)
+                    if (monthItem !== monthCurrent) {
+                        isAnnual = false
+                    }
+                }
+
+                const valueOfCell = () => showValue(item.value, itens.periods.type, currentTable.monthTable, itens.periods.days)
+                if (item && isAnnual) {
+                    return <TableCellsPeriods
+                        key={`${idTable + 1}${idItens}`}
+                        name={item.name}
+                        value={valueOfCell()}
+                        installment={item.installment}
+                        type={item.type}
+                        paid={item.paid}
+                        id={item.id}
+                        repeat={item.repeat}
+                        setPeriodItens={setPeriodItens}
+                        expenseClass={expenseClass}
+                        expensesPeriodItens={expensesPeriodItens}
+                        setExpensesPeriodItens={setExpensesPeriodItens}
+                        table={currentTable.getInformations()}
+                        tables={tables}
+                        setAllTables={setTables}
+                        setAllert={setAllert}
+                    />
+                }
             }
         }
     }
-    function resultOnMonth() {
-        let salaryFloat = 0
-        currentTable.salary === "" ? salaryFloat = 0 : salaryFloat = parseFloat(currentTable.salary)
-        let allExpenses = 0
-        expensesPeriodItens.forEach(expenses => {
-            allExpenses += parseFloat(expenses.replace(',', '.'))
-        })
-        currentTable.itensTable.forEach(expenses => !expenses.repeat ? allExpenses += parseFloat(expenses.value) : "")
-        salaryFloat -= allExpenses
-        return salaryFloat
-    }
+
     const titleTr = [
         { name: "Nome", width: "flex text-gray-600 justify-start w-[18rem] font-medium pl-3" },
         { name: "Valor", width: "flex text-gray-600 justify-start w-60 font-medium pl-3" },
@@ -171,9 +175,9 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
                             </section>
                         </div>
                     </div>
-                    <div className='pr-2 pl-24'>
-                        <ResultOnMonth resultOnMonth={resultOnMonth()} />
-                    </div>
+                    <ResultOnMonth table={table}
+                        valueSalary={table.salary}
+                        expensesPeriodItens={expensesPeriodItens} />
                 </div>
                 :
                 <>

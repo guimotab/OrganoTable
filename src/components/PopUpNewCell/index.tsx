@@ -14,17 +14,16 @@ interface PopUpProps {
     table: IObjectTable
     dateCurrent: string
     tables: IObjectTable[]
-    expensesPeriodItens: string[]
+    // expensesPeriodItens: string[]
+    // setExpensesPeriodItens: React.Dispatch<React.SetStateAction<string[]>>
     setMouseOutPopUp: React.Dispatch<React.SetStateAction<boolean>>
-    setExpensesPeriodItens: React.Dispatch<React.SetStateAction<string[]>>
-    hidden: () => void
     setTables: React.Dispatch<React.SetStateAction<IObjectTable[]>>
 }
-const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, expensesPeriodItens, setExpensesPeriodItens, setTables }: PopUpProps) => {
+const PopUpNewCell = ({ table, dateCurrent, tables, setMouseOutPopUp, setTables }: PopUpProps) => {
     const currentTable = new CurrentTable(table)
     const allTables = new Tables(tables)
 
-    const [installment, setInstallment] = useState(false)
+    // const [installment, setInstallment] = useState(false)
     const [name, setName] = useState("")
     const [value, setValue] = useState("")
     const [type, setType] = useState("")
@@ -258,56 +257,58 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, ex
         <div
             onMouseLeave={() => setMouseOutPopUp(true)}
             onMouseEnter={() => setMouseOutPopUp(false)}
-            className="absolute bg-cor-secundaria py-3 h-fit w-[34rem] top-36 left-[46rem]">
-            <div>
-                <button onClick={() => hidden()} className='flex mx-2 px-2.5 text-black font-medium rounded-lg bg-white'>X</button>
-            </div>
-            <form onSubmit={event => submitForm(event)} className='flex flex-col gap-2'>
-                {formInput.map((input, index) => <FormInput
-                    key={index}
-                    label={input.label}
-                    type={input.type}
-                    value={input.value}
-                    minLength={input.minLength}
-                    maxLength={input.maxLength}
-                    onChange={input.onChange}
-                    onBlur={input.onBlur}
-                    pattern={input.pattern}
-                    required={input.required}
-                    tagP={input.tagP}
-                />)}
-                <div className='flex items-center justify-between gap-2 ml-5 mr-5 px-2 '>
-                    <label className='text-white font-medium'>Tipo: </label>
-                    <select onChange={event => setType(event.target.value)} className='font-medium'>
+            className="absolute shadow-2xl border border-cor-secundaria rounded-xl bg-white px-9 py-9 h-fit w-[35rem] top-36 left-[46rem]">
+            <form
+                onSubmit={event => submitForm(event)}
+                className='grid grid-cols-2 grid-rows-[auto]'>
+                <div className='flex pb-4'>
+                    {formInput.map((input, index) => <FormInput
+                        key={index}
+                        label={input.label}
+                        type={input.type}
+                        value={input.value}
+                        minLength={input.minLength}
+                        maxLength={input.maxLength}
+                        onChange={input.onChange}
+                        onBlur={input.onBlur}
+                        pattern={input.pattern}
+                        required={input.required}
+                        tagP={input.tagP}
+                    />)}
+                </div>
+                <div className='flex col-start-1 row-start-2 items-center justify-start gap-2 pb-4'>
+                    <label className='font-medium'>Tipo: </label>
+                    <select
+                        onChange={event => setType(event.target.value)}
+                        className='w-36 rounded-md py-0.5 border-2 border-gray-300 font-medium focus:border-cor-secundaria outline-none'>
                         {optionsSelectInput.map((option, index) =>
                             <option key={index} className='font-medium'>{option.label}</option>
                         )}
                     </select>
                 </div>
-                <div className='flex justify-between mr-7'>
-                    <div className='flex gap-1 ml-5 mr-8 px-2'>
-                        <label className='text-white font-medium'>Parcelado: </label>
-                    </div>
-                    <select onChange={event => changeValueInstallment(event)} className='w-24 font-medium'>
+                <div className='flex col-start-2 row-start-2 items-center justify-start gap-2 pb-4'>
+                    <label className=' font-medium'>Parcelado: </label>
+                    <select
+                        onChange={event => changeValueInstallment(event)}
+                        className='w-24 rounded-md py-0.5 border-2 border-gray-300 font-medium focus:border-cor-secundaria outline-none'>
                         {installmentSelectInput.map((option, index) =>
                             <option key={index} className='font-medium'>{option.label}</option>
                         )}
                     </select>
                 </div>
-                {
-                    !checkInstallment ?
-                        <div className='flex gap-1 ml-5 mr-8 px-2'>
-                            <label className='text-white font-medium'>Repetir</label>
-                            <input
-                                checked={repeat}
-                                type="checkbox"
-                                onChange={event => changeRepeat()}
-                            />
-                        </div> : <></>
+                {!checkInstallment ?
+                    <div className='flex items-center row-start-3 gap-1 pb-2'>
+                        <label className='font-medium'>Repetir</label>
+                        <input
+                            checked={repeat}
+                            type="checkbox"
+                            onChange={event => changeRepeat()}
+                        />
+                    </div> : <></>
                 }
                 {repeat ?
                     <>
-                        <div className='flex mx-7 justify-between'>
+                        <div className='flex col-span-2 row-start-4 justify-between pb-2'>
                             {buttonPeriods.map((button, index) =>
                                 <button
                                     key={index}
@@ -320,20 +321,23 @@ const PopUpNewCell = ({ table, hidden, dateCurrent, tables, setMouseOutPopUp, ex
                     </> : <></>
                 }
                 {repeat && typeRepeat === "Semanalmente" ?
-                    <div className='flex gap-3 mx-7'>
+                    <div className='flex row-start-5 gap-3 '>
                         {arrayDaysRepeat.map((days, index) =>
                             <div key={index}>
-                                <p className="font-medium text-white">{days.label}</p>
+                                <p className="font-medium ">{days.label}</p>
                                 <input type='checkbox' onChange={(event) => days.onChange(event)} />
                             </div>
                         )}
                     </div>
                     : <></>}
-                <button
-                    type='submit'
-                    onClick={event => submitForm(event)}
-                    className='flex self-center bg-white w-fit px-4 py rounded-lg font-medium text-lg'
-                >Criar</button>
+                <div className='flex justify-center row-start-6 col-span-2'>
+                    <button
+                        type='submit'
+                        onClick={event => submitForm(event)}
+                        className='flex text-white bg-cor-secundaria w-fit px-4 py-0.5 rounded-lg font-medium text-lg'>
+                        Criar
+                    </button>
+                </div>
             </form>
 
         </div >

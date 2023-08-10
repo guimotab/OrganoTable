@@ -8,6 +8,7 @@ import { FaCheck } from "react-icons/fa"
 import { Expenses } from "../../models/Expenses"
 import { BsTrash3Fill } from "react-icons/bs"
 import WarningDeleteCell from "../WarningDeleteCell"
+import IPeriodsItens from "../../shared/IPeriodsItens"
 
 interface TableCellsPeriodProps {
     name: string
@@ -17,6 +18,7 @@ interface TableCellsPeriodProps {
     paid: boolean
     id: string
     repeat: boolean
+    setPeriodItens: React.Dispatch<React.SetStateAction<IPeriodsItens[]>>
     expenseClass: Expenses
     expensesPeriodItens: string[]
     setExpensesPeriodItens: React.Dispatch<React.SetStateAction<string[]>>
@@ -26,7 +28,7 @@ interface TableCellsPeriodProps {
     setAllert: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, expenseClass, expensesPeriodItens, setExpensesPeriodItens, table, tables, setAllTables, setAllert }: TableCellsPeriodProps) => {
+const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, setPeriodItens, expenseClass, expensesPeriodItens, setExpensesPeriodItens, table, tables, setAllTables, setAllert }: TableCellsPeriodProps) => {
     const currentTable = new CurrentTable(table)
 
     const [editButtonName, setEditButtonName] = useState(false)
@@ -135,6 +137,7 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, e
                         <WarningDeleteCell
                             id={idCell}
                             repeat={repeatCell}
+                            setPeriodItens={setPeriodItens}
                             textP={"Você deseja excluir:"}
                             table={table}
                             tables={tables}

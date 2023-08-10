@@ -7,5 +7,5 @@ export interface IObjectTable {
     salary: string,
     itensTable: ITableItens[],
     highestIdInstallment: string
-    periodsItens: IPeriodsItens[] | undefined
+    periodsItens: IPeriodsItens[]
 }

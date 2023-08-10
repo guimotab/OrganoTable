@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { IObjectTable } from "../../shared/IObjectTable"
 import { LocalStorager } from "../../service/LocalStorager"
-import { dayTime } from "../../utils/dayTime"
 import { CurrentTable } from "../../models/CurrentTable"
 import { Tables } from "../../models/Tables"
 interface InputSalaryProps {
@@ -15,23 +14,17 @@ const InputSalary = ({ table, tables, dateCurrent, setTables }: InputSalaryProps
     const currentTable = new CurrentTable(table)
     const allTables = new Tables(tables)
 
-    const indexCurrentTable = allTables.tables.findIndex(object => object.monthTable === dateCurrent)
+    // const indexCurrentTable = allTables.tables.findIndex(object => object.monthTable === dateCurrent)
 
-    const [salaryValue, setSalaryValue] = useState("")
-    const [showSalaryValue, setShowSalaryValue] = useState("")
-    const [changeInput, setChangeInput] = useState(false)
+    const [showSalaryValue, setShowSalaryValue] = useState(currentTable.salary)
     const [errorInput, setErrorInput] = useState(false)
+    
+    useEffect(()=>{
+        table.salary === "" ?
+        setShowSalaryValue("0,00") :
+        setShowSalaryValue((table.salary.replace('.', ',')))
+    },[tables, dateCurrent])
 
-    // function setValue(event?: React.ChangeEvent<HTMLInputElement>){
-    //     let salary
-    //     if(event){
-    //         salary = event.target.value
-    //     } else {
-    //         setShowSalaryValue(table.salary)
-    //     }
-
-    //     return salary
-    // }
     function checkInput(event: React.FocusEvent<HTMLInputElement, Element>) {
         let targeValue = event.target.value
         if(targeValue === ""){
@@ -42,20 +35,17 @@ const InputSalary = ({ table, tables, dateCurrent, setTables }: InputSalaryProps
             }
         }
         const valueInput = parseFloat(targeValue.replace(',', '.')).toFixed(2)
-        const regex = /^(\d+)((\.)\d{2})?$/
-        const result = regex.test(valueInput)
 
-        if (result) {
-            setSalaryValue(valueInput)
-            setShowSalaryValue("")
+        if (!Number.isNaN(valueInput)) {
+            if(currentTable.id === "0"){
+                currentTable.id = `${allTables.highestId() + 1}`
+            }
+            setShowSalaryValue(valueInput.replace('.', ','))
             setErrorInput(false)
-            setChangeInput(false)
-
-            const newObjects = [...allTables.tables]
-            newObjects[indexCurrentTable].salary = valueInput.replace('.', ',')
-
-            setTables(newObjects)
-            LocalStorager.saveInformations(allTables.tables)
+            currentTable.salary = valueInput.replace('.', ',')
+            allTables.updateTables(currentTable.monthTable, currentTable.getInformations())
+            setTables(allTables.returnTables())
+            LocalStorager.saveInformations(tables)
         } else {
             setErrorInput(true)
         }
@@ -66,7 +56,7 @@ const InputSalary = ({ table, tables, dateCurrent, setTables }: InputSalaryProps
             <div className="flex flex-col gap-1 w-40">
                 <div className="flex">
                     <p className="font-medium">R$</p>
-                    {changeInput ?
+                    {
                         <input
                             placeholder={currentTable.salary}
                             type="text"
@@ -76,10 +66,6 @@ const InputSalary = ({ table, tables, dateCurrent, setTables }: InputSalaryProps
                             onChange={event => setShowSalaryValue(event.target.value)}
                             onBlur={event => checkInput(event)}
                             className="px-1 focus:outline-none rounded-lg font-medium" />
-                        :
-                        <p onClick={event => setChangeInput(true)} className="px-1 w-full rounded-lg font-medium cursor-text">
-                            {currentTable.salary == "" ? "0,00" : currentTable.salary}
-                        </p>
                     }
                 </div>
                 <div className="border-b-2 border-cor-secundaria border-dashed w-full"></div>

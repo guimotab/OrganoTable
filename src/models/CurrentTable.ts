@@ -80,9 +80,7 @@ export class CurrentTable {
     public set periodsItens(newPeriodsItens: IPeriodsItens[]) {
         
         if(this._periodsItens[0].id === ""){
-            
             this._periodsItens = newPeriodsItens
-            console.log(this._periodsItens);
         } else {
             this.periodsItens.push(...newPeriodsItens)
         }

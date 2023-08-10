@@ -23,7 +23,7 @@ function App() {
 
   let currentTable
 
-  const indexCurrentTable = tables.findIndex((object: IObjectTable) => object.monthTable == dateCurrent)
+  const indexCurrentTable = tables.findIndex((object: IObjectTable) => object.monthTable === dateCurrent)
 
   if (tables[indexCurrentTable]) {
     currentTable = tables[indexCurrentTable]
@@ -84,10 +84,7 @@ function App() {
           dateCurrent={dateCurrent}
           tables={tables}
           table={currentTable}
-          expensesPeriodItens={expensesPeriodItens}
           setMouseOutPopUp={setMouseOutPopUp}
-          setExpensesPeriodItens={setExpensesPeriodItens}
-          hidden={hiddenCell}
           setTables={setTables} /> : <></>}
       </div>
     </div>

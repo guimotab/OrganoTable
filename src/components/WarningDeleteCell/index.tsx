@@ -2,6 +2,7 @@ import { CurrentTable } from "../../models/CurrentTable"
 import { Tables } from "../../models/Tables"
 import { LocalStorager } from "../../service/LocalStorager"
 import { IObjectTable } from "../../shared/IObjectTable"
+import IPeriodsItens from "../../shared/IPeriodsItens"
 import { IdTable } from "../../utils/IdTables"
 import deleteTablesUnused from "../../utils/deleteTablesUnused"
 
@@ -9,6 +10,7 @@ interface WarningDeleteCellProps {
     textP: string
     id: string
     repeat?: boolean
+    setPeriodItens?: React.Dispatch<React.SetStateAction<IPeriodsItens[]>>
     table: IObjectTable
     tables: IObjectTable[]
     setTables: (value: React.SetStateAction<IObjectTable[]>) => void
@@ -16,12 +18,12 @@ interface WarningDeleteCellProps {
     setShowWarningDelete: React.Dispatch<React.SetStateAction<boolean>>
 
 }
-const WarningDeleteCell = ({ textP, id, repeat, table, tables, setTables, setOptionsButtons, setShowWarningDelete }: WarningDeleteCellProps) => {
+const WarningDeleteCell = ({ textP, id, repeat, setPeriodItens, table, tables, setTables, setOptionsButtons, setShowWarningDelete }: WarningDeleteCellProps) => {
     const allTables = new Tables(tables)
     const currentTable = new CurrentTable(table)
     function deleteCell(choiceButtonTypeRepeat?: string) {
         const idTypeInstallment = id.split("-")[1]
-        if (idTypeInstallment) {
+        if (idTypeInstallment) { //para installment
             let indexTable = allTables.tables.findIndex(table => table.itensTable.find(item => item.id.split("-")[1] === idTypeInstallment))
             while (indexTable !== -1) {
                 const indexItem = allTables.tables[indexTable].itensTable.findIndex(item => item.id.split("-")[1] === idTypeInstallment)
@@ -31,21 +33,33 @@ const WarningDeleteCell = ({ textP, id, repeat, table, tables, setTables, setOpt
             setTables(deleteTablesUnused(allTables.tables))
             LocalStorager.saveInformations(tables)
         } else {
-            if (repeat) {
-                if (choiceButtonTypeRepeat) {
-                    const idTable = IdTable.returnIdTable(id)
-                    const indexTable = tables.findIndex(table => table.id === idTable)
+            if (repeat) { // para repeat
+                const idTable = IdTable.returnIdTable(id)
+                const indexTable = tables.findIndex(table => table.id === idTable)
+
+                if (choiceButtonTypeRepeat === "Todos") {
                     const indexItemTable = tables[indexTable].itensTable.findIndex(item => item.id === id)
                     allTables.tables[indexTable].itensTable.splice(indexItemTable, 1)
                     setTables(deleteTablesUnused(allTables.tables))
                     LocalStorager.saveInformations(tables)
-                }
 
-            } else {
+                } else if (choiceButtonTypeRepeat === "Deste em diante") {
+                    if(allTables.tables[indexTable].monthTable === currentTable.monthTable){ // se o mês da tabela for igual ao mês do delete
+                        const indexItemTable = allTables.tables[indexTable].itensTable.findIndex(item => item.id === id)
+                        allTables.tables[indexTable].itensTable.splice(indexItemTable, 1)
+                    } else { // se o mês da tabela for diferente ao mês do delete
+                        const indexPeriodItem = allTables.tables[indexTable].periodsItens.findIndex(period => period.id === id)
+                        const thisTable = allTables.tables[indexTable]
+                        thisTable.periodsItens[indexPeriodItem].lastMonthYear = `${currentTable.monthTable}`
+                    }
+                    setTables(deleteTablesUnused(allTables.tables))
+                    LocalStorager.saveInformations(tables)
+                }
+            } else { // para normal
                 const idItem = id
                 const indexItem = table.itensTable.findIndex(item => item.id === idItem)
                 currentTable.itensTable.splice(indexItem, 1)
-                allTables.updateTables(currentTable.monthTable, currentTable)
+                allTables.updateTables(currentTable.monthTable, currentTable.getInformations())
                 setTables(deleteTablesUnused(allTables.tables))
                 LocalStorager.saveInformations(tables)
             }
@@ -76,7 +90,7 @@ const WarningDeleteCell = ({ textP, id, repeat, table, tables, setTables, setOpt
                     <p className="flex justify-center">{textP}</p>
                     <div className="flex justify-center px-2 gap-3">
                         <button onClick={event => deleteCell("Todos")} className="bg-cor-secundaria px-3 py rounded-lg">Todos</button>
-                        <button onClick={event => deleteCell()} className="bg-cor-secundaria px-3 py rounded-lg">Deste em diante</button>
+                        <button onClick={event => deleteCell("Deste em diante")} className="bg-cor-secundaria px-3 py rounded-lg">Deste em diante</button>
                     </div>
                 </>
             }
