@@ -7,6 +7,7 @@ import EditCell from '../EditCell'
 import { IoMdInformationCircle } from 'react-icons/io'
 import { BsTrash3Fill } from 'react-icons/bs'
 import WarningDeleteCell from '../WarningDeleteCell'
+import IconDeleteCell from '../IconDeleteCell'
 
 
 interface TableCellsProps {
@@ -33,7 +34,6 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, table, t
     const [editButtonName, setEditButtonName] = useState(0)
     const [editButtonValue, setEditButtonValue] = useState(0)
     const [optionsButtons, setOptionsButtons] = useState(false)
-    const [showWarningDelete, setShowWarningDelete] = useState(false)
 
     const [nameCell, setNameCell] = useState(name)
     const [valueCell, setValueCell] = useState(value)
@@ -176,38 +176,16 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, table, t
     ]
     return (
         <div className='flex'>
-            {optionsButtons ?
-                <div className='flex flex-col justify-center'>
-                    <div className='flex justify-end pr-3 w-24 gap-2'
-                        onMouseEnter={event => setOptionsButtons(true)}
-                        onMouseLeave={event => setOptionsButtons(false)}>
-                        {/* <IoMdInformationCircle
-                            size={25}
-                            className='text-cor-terciaria hover:text-cor-hover'
-                        /> */}
-                        <BsTrash3Fill
-                            size={25}
-                            className='text-cor-terciaria hover:text-cor-erro pb-1'
-                            onClick={event => setShowWarningDelete(true)}
-                            onMouseLeave={event => setShowWarningDelete(false)}
-                        />
-                    </div>
-                    {showWarningDelete ?
-                        <WarningDeleteCell
-                            id={idCell}
-                            textP={"Você tem certeza?"}
-                            table={table}
-                            tables={tables}
-                            setTables={setAllTables}
-                            setOptionsButtons={setOptionsButtons}
-                            setShowWarningDelete={setShowWarningDelete}
-                        />
-                        : <></>
-                    }
-                </div>
-                :
-                <div className='w-24'></div>
-            }
+            <IconDeleteCell
+                table={table}
+                tables={tables}
+                setAllTables={setAllTables}
+                optionsButtons={optionsButtons}
+                setOptionsButtons={setOptionsButtons}
+                idCell={idCell}
+                repeatCell={repeatCell}
+                textP={"Você tem certeza?"}
+            />
             <div
                 className='flex flex-grow border-2 rounded-lg border-cor-secundaria py-1.5'
                 onMouseEnter={event => setOptionsButtons(true)}
@@ -215,6 +193,7 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, table, t
                 {editButtons.map((button, index) =>
                     <div className={button.classDiv} key={index}>
                         <EditCell
+                            installmentCell={installmentCell}
                             editButton={button.editButton}
                             constCell={button.constCell}
                             onStartEditCell={button.onStartEditCell}
@@ -227,17 +206,24 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, table, t
                         />
                     </div>
                 )}
-                <div className='flex justify-start pl-4 w-32 border-gray-300 border-r-2'>
+                <div className='flex justify-center w-28 border-gray-300 border-r-2'>
                     <p className='font-medium'>{installmentCell}</p>
                 </div>
-                <div className='flex justify-start pl-4 w-48 border-gray-300 border-r-2'>
-                    <select onChange={event => changeTypeInput(event, typeCell)} value={typeCell} className='w-40 font-medium'>
-                        {optionsSelectInput.map((option, index) =>
-                            <option key={index} className='font-medium'>{option.label}</option>
-                        )}
-                    </select>
-                </div>
-                <div className='flex w-24 text-center justify-center'>
+                {
+                    installmentCell === "1/1" ?
+                        <div className='flex justify-start px-4 w-44 border-gray-300 border-r-2'>
+                            <select onChange={event => changeTypeInput(event, typeCell)} value={typeCell} className='w-40 font-medium'>
+                                {optionsSelectInput.map((option, index) =>
+                                    <option key={index} className='font-medium'>{option.label}</option>
+                                )}
+                            </select>
+                        </div>
+                        :
+                        <div className='flex justify-center w-44 border-gray-300 border-r-2'>
+                            <p className='font-medium'>{typeCell}</p>
+                        </div>
+                }
+                <div className='flex flex-grow text-center justify-center'>
                     {
                         <input
                             type="checkbox"

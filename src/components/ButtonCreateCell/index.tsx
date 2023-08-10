@@ -4,7 +4,7 @@ import { AiOutlinePlusSquare } from "react-icons/ai"
 interface CellsProps {
     onClick: () => void
 }
-const Cells = ({ onClick }: CellsProps) => {
+const ButtonCreateCell = ({ onClick }: CellsProps) => {
     return (
         <button
             onClick={onClick}
@@ -15,4 +15,4 @@ const Cells = ({ onClick }: CellsProps) => {
     )
 }
 
-export default Cells
+export default ButtonCreateCell

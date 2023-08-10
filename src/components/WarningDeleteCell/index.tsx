@@ -10,7 +10,6 @@ interface WarningDeleteCellProps {
     textP: string
     id: string
     repeat?: boolean
-    setPeriodItens?: React.Dispatch<React.SetStateAction<IPeriodsItens[]>>
     table: IObjectTable
     tables: IObjectTable[]
     setTables: (value: React.SetStateAction<IObjectTable[]>) => void
@@ -18,7 +17,7 @@ interface WarningDeleteCellProps {
     setShowWarningDelete: React.Dispatch<React.SetStateAction<boolean>>
 
 }
-const WarningDeleteCell = ({ textP, id, repeat, setPeriodItens, table, tables, setTables, setOptionsButtons, setShowWarningDelete }: WarningDeleteCellProps) => {
+const WarningDeleteCell = ({ textP, id, repeat, table, tables, setTables, setOptionsButtons, setShowWarningDelete }: WarningDeleteCellProps) => {
     const allTables = new Tables(tables)
     const currentTable = new CurrentTable(table)
     function deleteCell(choiceButtonTypeRepeat?: string) {

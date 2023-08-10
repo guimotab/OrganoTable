@@ -1,5 +1,4 @@
-import './App.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Aside from './components/Aside';
 import Table from './components/Table';
 import PopUpNewCell from './components/PopUpNewCell';
@@ -29,21 +28,21 @@ function App() {
     currentTable = tables[indexCurrentTable]
   } else {
     currentTable =
-    {
-      id: "0",
-      salary: "",
-      monthTable: dateCurrent,
-      itensTable: [],
-      highestIdInstallment:"",
-      periodsItens: [{
-        id: "",
-        periods: {
-          type: "",
-          days: []
-        },
-        lastMonthYear: ""
-      }]
-    } as IObjectTable
+      {
+        id: "0",
+        salary: "",
+        monthTable: dateCurrent,
+        itensTable: [],
+        highestIdInstallment: "",
+        periodsItens: [{
+          id: "",
+          periods: {
+            type: "",
+            days: []
+          },
+          lastMonthYear: ""
+        }]
+      } as IObjectTable
     const allTables = [...deleteTablesUnused(tables)]
     allTables.push(currentTable)
     setTables(allTables)
@@ -51,9 +50,6 @@ function App() {
 
   function newCell() {
     setShowPopUp(true)
-  }
-  function hiddenCell() {
-    setShowPopUp(false)
   }
   function closePopUpClickOut() {
     if (showPopUp && mouseOutPopUp) {
@@ -63,23 +59,22 @@ function App() {
 
   return (
     <div className="grid grid-cols-[14rem_auto] h-screen w-screen">
-      {/* <button onClick={event => console.log(dayTime(dateCurrent))}>Teste</button> */}
-        <Aside closePopUpClickOut={closePopUpClickOut}/>
-      <div className='col-start-2 flex flex-col pr-20 pt-14 gap-5 w-full overflow-hidden'>
-        <div onClick={closePopUpClickOut}>
-          <div className='pl-24'>
-            <InputSalary table={currentTable} tables={tables} dateCurrent={dateCurrent} setTables={setTables} />
-          </div>
-          <Table
-            table={currentTable}
-            tables={tables}
-            dateCurrent={dateCurrent}
-            expensesPeriodItens={expensesPeriodItens}
-            setExpensesPeriodItens={setExpensesPeriodItens}
-            setTables={setTables}
-            setDateCurrent={setDateCurrent}
-            onClick={newCell} />
+      <Aside closePopUpClickOut={closePopUpClickOut} />
+      <div
+        onClick={closePopUpClickOut}
+        className='col-start-2 flex flex-col pr-20 pt-14 gap-5 overflow-hidden w-[68rem]'>
+        <div className='pl-24'>
+          <InputSalary table={currentTable} tables={tables} dateCurrent={dateCurrent} setTables={setTables} />
         </div>
+        <Table
+          table={currentTable}
+          tables={tables}
+          dateCurrent={dateCurrent}
+          expensesPeriodItens={expensesPeriodItens}
+          setExpensesPeriodItens={setExpensesPeriodItens}
+          setTables={setTables}
+          setDateCurrent={setDateCurrent}
+          onClick={newCell} />
         {showPopUp ? <PopUpNewCell
           dateCurrent={dateCurrent}
           tables={tables}

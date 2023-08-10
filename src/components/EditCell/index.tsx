@@ -2,6 +2,7 @@ import { BiEditAlt } from "react-icons/bi"
 import { FaCheck } from "react-icons/fa"
 
 interface EditCellProps {
+    installmentCell: string
     editButton: number
     constCell: string
     onStartEditCell: (setEditButton: React.Dispatch<React.SetStateAction<number>>) => void
@@ -13,7 +14,7 @@ interface EditCellProps {
     tagP?: string
 }
 
-const EditCell = ({ editButton, constCell, onStartEditCell, onEndEditCell, setEditButton, setConstCell, maxLength, pattern, tagP }: EditCellProps) => {
+const EditCell = ({ installmentCell, editButton, constCell, onStartEditCell, onEndEditCell, setEditButton, setConstCell, maxLength, pattern, tagP }: EditCellProps) => {
     return (
         !editButton ?
             <div className="flex items-center justify-between pl-4 pr-3 w-full">
@@ -21,10 +22,14 @@ const EditCell = ({ editButton, constCell, onStartEditCell, onEndEditCell, setEd
                     <p className="font-medium">{tagP}</p>
                     <h3 className='font-medium'>{constCell}</h3>
                 </div>
-                <button
-                    onClick={event => onStartEditCell(setEditButton)}
-                    className='bg-cor-secundaria rounded-lg text-white h-7 w-fit px-1.5'
-                ><BiEditAlt size={18} /></button>
+                {installmentCell === "1/1" ?
+                    <button
+                        onClick={event => onStartEditCell(setEditButton)}
+                        className='bg-cor-secundaria rounded-lg text-white h-7 w-fit px-1.5'>
+                        <BiEditAlt size={18} />
+                    </button>
+                    : <></>
+                }
             </div>
             :
             <form

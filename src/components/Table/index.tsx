@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { IObjectTable } from '../../shared/IObjectTable'
 import { ITableItens } from '../../shared/ITableItens'
-import CreateCell from '../CreateCell'
+import CreateCell from '../ButtonCreateCell'
 import TableCells from '../TableCells'
 import TableTitle from '../TableTitle'
 import ResultOnMonth from '../ResultOnMonth/ResultOnMonth'
@@ -131,7 +131,6 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
                         repeat={item.repeat}
                         setPeriodItens={setPeriodItens}
                         expenseClass={expenseClass}
-                        expensesPeriodItens={expensesPeriodItens}
                         setExpensesPeriodItens={setExpensesPeriodItens}
                         table={currentTable.getInformations()}
                         tables={tables}
@@ -146,8 +145,8 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
     const titleTr = [
         { name: "Nome", width: "flex text-gray-600 justify-start w-[18rem] font-medium pl-3" },
         { name: "Valor", width: "flex text-gray-600 justify-start w-60 font-medium pl-3" },
-        { name: "Parcela", width: "flex text-gray-600 justify-start w-32 font-medium pl-3" },
-        { name: "Tipo", width: "flex text-gray-600 justify-start w-48 font-medium pl-3" },
+        { name: "Parcela", width: "flex text-gray-600 justify-start w-28 font-medium pl-3" },
+        { name: "Tipo", width: "flex text-gray-600 justify-start w-44 font-medium pl-3" },
         { name: "Pago", width: "flex text-gray-600 justify-start w-24 font-medium pl-2" },
     ]
 

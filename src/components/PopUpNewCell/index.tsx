@@ -26,7 +26,7 @@ const PopUpNewCell = ({ table, dateCurrent, tables, setMouseOutPopUp, setTables 
     // const [installment, setInstallment] = useState(false)
     const [name, setName] = useState("")
     const [value, setValue] = useState("")
-    const [type, setType] = useState("")
+    const [type, setType] = useState("Despesas")
     const [valueInstallment, setValueInstallment] = useState("1")
     const [repeat, setRepeat] = useState(false)
     const [checkInstallment, setCheckInstallment] = useState(false)
@@ -64,7 +64,7 @@ const PopUpNewCell = ({ table, dateCurrent, tables, setMouseOutPopUp, setTables 
     function constructNewCell(lastIdCell: number) {
         let newCell
         const secondId = lastIdCell
-        let idInstallment = ""
+        let idInstallment=""
         if (parseFloat(valueInstallment) > 1) {
             idInstallment = `-${currentTable.id}P${secondId}`
         }
@@ -257,7 +257,7 @@ const PopUpNewCell = ({ table, dateCurrent, tables, setMouseOutPopUp, setTables 
         <div
             onMouseLeave={() => setMouseOutPopUp(true)}
             onMouseEnter={() => setMouseOutPopUp(false)}
-            className="absolute shadow-2xl border border-cor-secundaria rounded-xl bg-white px-9 py-9 h-fit w-[35rem] top-36 left-[46rem]">
+            className="absolute shadow-2xl border border-cor-secundaria rounded-xl bg-white px-9 py-9 h-fit w-[35rem] top-40 left-[46rem]">
             <form
                 onSubmit={event => submitForm(event)}
                 className='grid grid-cols-2 grid-rows-[auto]'>
@@ -280,7 +280,7 @@ const PopUpNewCell = ({ table, dateCurrent, tables, setMouseOutPopUp, setTables 
                     <label className='font-medium'>Tipo: </label>
                     <select
                         onChange={event => setType(event.target.value)}
-                        className='w-36 rounded-md py-0.5 border-2 border-gray-300 font-medium focus:border-cor-secundaria outline-none'>
+                        className='w-36 rounded-md border-2 border-gray-300 font-medium focus:border-cor-secundaria outline-none'>
                         {optionsSelectInput.map((option, index) =>
                             <option key={index} className='font-medium'>{option.label}</option>
                         )}

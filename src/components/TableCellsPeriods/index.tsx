@@ -9,6 +9,8 @@ import { Expenses } from "../../models/Expenses"
 import { BsTrash3Fill } from "react-icons/bs"
 import WarningDeleteCell from "../WarningDeleteCell"
 import IPeriodsItens from "../../shared/IPeriodsItens"
+import Cell from "../Cell"
+import IconDeleteCell from "../IconDeleteCell"
 
 interface TableCellsPeriodProps {
     name: string
@@ -20,7 +22,7 @@ interface TableCellsPeriodProps {
     repeat: boolean
     setPeriodItens: React.Dispatch<React.SetStateAction<IPeriodsItens[]>>
     expenseClass: Expenses
-    expensesPeriodItens: string[]
+    // expensesPeriodItens: string[]
     setExpensesPeriodItens: React.Dispatch<React.SetStateAction<string[]>>
     table: IObjectTable
     tables: IObjectTable[]
@@ -28,22 +30,17 @@ interface TableCellsPeriodProps {
     setAllert: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, setPeriodItens, expenseClass, expensesPeriodItens, setExpensesPeriodItens, table, tables, setAllTables, setAllert }: TableCellsPeriodProps) => {
+const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, setPeriodItens, expenseClass, setExpensesPeriodItens, table, tables, setAllTables, setAllert }: TableCellsPeriodProps) => {
     const currentTable = new CurrentTable(table)
-
-    const [editButtonName, setEditButtonName] = useState(false)
-    const [editButtonValue, setEditButtonValue] = useState(false)
 
     const [nameCell, setNameCell] = useState(name)
     const [valueCell, setValueCell] = useState(value)
     const [installmentCell, setInstallmentCell] = useState(installment)
     const [repeatCell, setRepeatCell] = useState(repeat)
     const [typeCell, setTypeCell] = useState(type)
-    const [paidCell, setPaidCell] = useState(paid)
     const [idCell, setIdCell] = useState(id)
-
+    
     const [optionsButtons, setOptionsButtons] = useState(false)
-    const [showWarningDelete, setShowWarningDelete] = useState(false)
 
     useEffect(() => {
         setNameCell(name)
@@ -51,7 +48,6 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, s
         setInstallmentCell(installment)
         setRepeatCell(repeat)
         setTypeCell(type)
-        setPaidCell(paid)
         setIdCell(id)
     }, [name, value, installment, repeat, type, paid, id])
 
@@ -59,205 +55,47 @@ const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, s
         expenseClass.expenses = [value]
         expenseClass.setExpensesPeriodItens(setExpensesPeriodItens)
     }, [table.monthTable])
-
-    function onStartEditCell(setEditButton: React.Dispatch<React.SetStateAction<boolean>>) {
-        setEditButton(true)
-        setAllert(true)
-    }
-    function onEndEditCell(event: React.FormEvent<HTMLFormElement>, setEditButton: React.Dispatch<React.SetStateAction<boolean>>) {
-        event.preventDefault()
-        setAllert(false)
-
-        setEditButton(false)
-
-        const cellEdited = {
-            name: nameCell,
-            value: createFormatValue(valueCell, setValueCell),
-            installment: installmentCell,
-            repeat: repeatCell,
-            type: typeCell,
-            paid: paidCell,
-            id: idCell
+    const cells = [
+        {
+            constCell: nameCell,
+            justifyCell: "justify-start",
+            classDiv: "flex w-[18rem] border-gray-300 border-r-2"
+        }, {
+            constCell: valueCell,
+            justifyCell: "justify-start",
+            tagP: "R$",
+            classDiv: "flex w-60 border-gray-300 border-r-2"
+        }, {
+            constCell: installmentCell,
+            justifyCell: "justify-center",
+            classDiv: "flex w-28 border-gray-300 border-r-2"
+        }, {
+            constCell: typeCell,
+            justifyCell: "justify-center",
+            classDiv: "flex w-44 border-gray-300 border-r-2"
         }
-
-        const indexObjectCurrent = tables.findIndex(object => object.monthTable === currentTable.monthTable)
-        const idObjectCurrent = currentTable.itensTable.findIndex(item => item.id === idCell)
-        const newObjects = [...tables]
-
-        newObjects[indexObjectCurrent].itensTable[idObjectCurrent] = cellEdited
-        setAllTables(newObjects)
-        LocalStorager.saveInformations(tables)
-    }
-    function changeTypeInput(event: React.ChangeEvent<HTMLSelectElement>) {
-        setTypeCell(event.target.value)
-        const cellEdited = {
-            name: nameCell,
-            value: createFormatValue(valueCell, setValueCell),
-            installment: installmentCell,
-            repeat: repeatCell,
-            type: event.target.value,
-            paid: paidCell,
-            id: idCell
-        }
-        const indexObjectCurrent = tables.findIndex(object => object.monthTable === currentTable.monthTable)
-        const idObjectCurrent = currentTable.itensTable.findIndex(item => item.id === idCell)
-        const newObjects = [...tables]
-
-
-        newObjects[indexObjectCurrent].itensTable[idObjectCurrent] = cellEdited
-        setAllTables(newObjects)
-        LocalStorager.saveInformations(tables)
-    }
-    const optionsSelectInput = [
-        { label: "Despesas" },
-        { label: "Investimento" },
-        { label: "Beleza" },
-        { label: "Saúde" },
-        { label: "Outros" }
     ]
     return (
         <div className="flex">
-            {optionsButtons ?
-                <div className='flex flex-col justify-center'>
-                    <div className='flex justify-end pr-3 w-24 gap-2'
-                        onMouseEnter={event => setOptionsButtons(true)}
-                        onMouseLeave={event => setOptionsButtons(false)}>
-                        {/* <IoMdInformationCircle
-                            size={25}
-                            className='text-cor-terciaria hover:text-cor-hover'
-                        /> */}
-                        <BsTrash3Fill
-                            size={25}
-                            className='text-cor-terciaria hover:text-cor-erro pb-1'
-                            onClick={event => setShowWarningDelete(true)}
-                            onMouseLeave={event => setShowWarningDelete(false)}
-                        />
-                    </div>
-                    {showWarningDelete ?
-                        <WarningDeleteCell
-                            id={idCell}
-                            repeat={repeatCell}
-                            setPeriodItens={setPeriodItens}
-                            textP={"Você deseja excluir:"}
-                            table={table}
-                            tables={tables}
-                            setTables={setAllTables}
-                            setOptionsButtons={setOptionsButtons}
-                            setShowWarningDelete={setShowWarningDelete}
-                        />
-                        : <></>
-                    }
-                </div>
-                :
-                <div className='w-24'></div>
-            }
+            <IconDeleteCell
+                table={table}
+                tables={tables}
+                setAllTables={setAllTables}
+                optionsButtons={optionsButtons}
+                setOptionsButtons={setOptionsButtons}
+                idCell={idCell}
+                repeatCell={repeatCell}
+                textP={"Você deseja excluir:"}
+            />
             <div className="flex flex-grow border-2 rounded-lg border-cor-secundaria py-1.5"
                 onMouseEnter={event => setOptionsButtons(true)}
                 onMouseLeave={event => setOptionsButtons(false)}>
-                <div className="flex justify-center w-[18rem] border-gray-300 border-r-2">
-                    {!editButtonName ?
-                        <div className="flex items-center justify-between pl-4 pr-3 w-full">
-                            <p className='font-medium'>{nameCell}</p>
-                            < button
-                                onClick={event => onStartEditCell(setEditButtonName)}
-                                className='bg-cor-secundaria rounded-lg text-white h-7 w-fit px-1.5'
-                            ><BiEditAlt size={18} /></button>
-                        </div>
-                        :
-                        <form
-                            onSubmit={event => onEndEditCell(event, setEditButtonName)}
-                            className="flex justify-between px-3 gap-2 w-full">
-                            <input
-                                type='text'
-                                value={nameCell}
-                                onChange={event => { setNameCell(event.target.value) }}
-                                autoFocus={true}
-                                className='px-1 w-full font-medium placeholder:font-medium border-cor-outline'
-                                placeholder={nameCell}
-                                maxLength={24}
-                                pattern={"^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$"}
-                            />
-                            <button
-                                type='submit'
-                                className='bg-cor-secundaria rounded-lg text-white h-7 w-fit px-2'>
-                                <FaCheck size={14} />
-                            </button>
-                        </form>}
-                </div>
-                <div className="flex justify-center w-60 border-gray-300 border-r-2">
-                    {!editButtonValue ?
-                        <div className="flex items-center justify-between pl-4 pr-3 w-full">
-                            <p className='font-medium'>R${valueCell}</p>
-                            < button
-                                onClick={event => onStartEditCell(setEditButtonValue)}
-                                className='bg-cor-secundaria rounded-lg text-white h-7 w-fit px-1.5'
-                            ><BiEditAlt size={18} /></button>
-                        </div>
-                        :
-                        <form
-                            onSubmit={event => onEndEditCell(event, setEditButtonValue)}
-                            className="flex justify-between px-3 gap-2 w-full">
-                            <input
-                                type='number'
-                                step={0.01}
-                                value={valueCell}
-                                onChange={event => { setValueCell(event.target.value) }}
-                                autoFocus={true}
-                                className='px-1 w-full font-medium placeholder:font-medium border-cor-outline'
-                                placeholder={valueCell}
-                                maxLength={12}
-                                pattern={"^(\d+)(\,|\.)(\d{2})?$"}
-                            />
-                            <button
-                                type='submit'
-                                className='bg-cor-secundaria rounded-lg text-white h-7 w-fit px-2'>
-                                <FaCheck size={14} />
-                            </button>
-                        </form>}
-                </div>
-                <div className="flex justify-center w-32 border-gray-300 border-r-2">
-                    <div className="flex items-center justify-center w-full">
-                        <p className='font-medium'>{installmentCell}</p>
-                    </div>
-                </div>
-                {/* <div className="flex justify-center w-60 border-gray-300 border-r-2">
-                    {!editButtonType ?
-                        <div className="flex items-center justify-between pl-4 pr-3 w-full">
-                            <p className='font-medium'>{typeCell}</p>
-                            < button
-                                onClick={event => onStartEditCell(setEditButtonType)}
-                                className='bg-cor-secundaria rounded-lg text-white h-7 w-fit px-1.5'
-                            ><BiEditAlt size={18} /></button>
-                        </div>
-                        :
-                        <form
-                            onSubmit={event => onEndEditCell(event, setEditButtonType)}
-                            className="flex justify-between px-3 gap-2 w-full">
-                            <input
-                                type='text'
-                                value={typeCell}
-                                onChange={event => { setTypeCell(event.target.value) }}
-                                autoFocus={true}
-                                className='px-1 w-full font-medium placeholder:font-medium border-cor-outline'
-                                placeholder={typeCell}
-                                maxLength={18}
-                                pattern={"^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$"}
-                            />
-                            <button
-                                type='submit'
-                                className='bg-cor-secundaria rounded-lg text-white h-7 w-fit px-2'>
-                                <FaCheck size={14} />
-                            </button>
-                        </form>}
-                </div> */}
-                <div className='flex justify-start pl-4 w-48 border-gray-300 border-r-2'>
-                    <select onChange={event => changeTypeInput(event)} value={typeCell} className="w-40 font-medium">
-                        {optionsSelectInput.map((option, index) =>
-                            <option key={index} className="font-medium">{option.label}</option>
-                        )}
-                    </select>
-                </div>
-                <div className='w-24'>
+                {cells.map((cell, index) =>
+                    <div className={cell.classDiv} key={index}>
+                        <Cell constCell={cell.constCell} tagP={cell.tagP} justifyCell={cell.justifyCell} />
+                    </div>)
+                }
+                <div className='flex flex-grow'>
                 </div>
             </div >
         </div>
