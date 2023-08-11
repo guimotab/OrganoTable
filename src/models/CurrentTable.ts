@@ -9,7 +9,6 @@ export class CurrentTable {
     private _salary: string
     private _itensTable: ITableItens[]
     private _periodsItens: IPeriodsItens[]
-    private _highestIdInstallment: string
 
     // constructor({ id, monthTable, salary, itensTable, periodsItens}: IObjectTable) {
     //     this._id = id || "0"
@@ -18,12 +17,11 @@ export class CurrentTable {
     //     this._itensTable = itensTable || []
     //     this._periodsItens = periodsItens = [{ id: "", periods: { type: "", days: [] } }] 
     // }
-    constructor({ id, monthTable, salary, itensTable, periodsItens, highestIdInstallment }: IObjectTable) {
+    constructor({ id, monthTable, salary, itensTable, periodsItens }: IObjectTable) {
         this._id = id || "0"
         this._monthTable = monthTable || dayTime()
         this._salary = salary || ""
         this._itensTable = itensTable || []
-        this._highestIdInstallment = highestIdInstallment
         this._periodsItens = periodsItens || [{ id: "", periods: { type: "", days: [] }, lastMonthYear: "" }]
     }
 
@@ -34,7 +32,6 @@ export class CurrentTable {
             salary: this._salary,
             itensTable: this._itensTable,
             periodsItens: this._periodsItens,
-            highestIdInstallment: this._highestIdInstallment
         }
     }
     constructPeriodItems() {
@@ -56,9 +53,6 @@ export class CurrentTable {
     public get periodsItens(): IPeriodsItens[] {
         return this._periodsItens
     }
-    public get highestIdInstallment(): string {
-        return this._highestIdInstallment
-    }
     public set id(newId) {
         this._id = newId
     }
@@ -67,9 +61,6 @@ export class CurrentTable {
     }
     public set salary(newSalary) {
         this._salary = newSalary
-    }
-    public set highestIdInstallment(newIdInstallment) {
-        this._highestIdInstallment = newIdInstallment
     }
     public set itensTable(newItensTable: ITableItens[]) {
         if (this._id === "0") {

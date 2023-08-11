@@ -31,8 +31,6 @@ function App() {
     currentTable.itensTable.forEach(expenses => !expenses.repeat ? expensesItens += parseFloat(expenses.value) : "")
     return expensesItens
   }
-
-
   function constructCurrentTable() {
     const indexCurrentTable = tables.findIndex((object: IObjectTable) => object.monthTable === dateCurrent)
     if (tables[indexCurrentTable]) {
@@ -44,7 +42,6 @@ function App() {
           salary: "0.00",
           monthTable: dateCurrent,
           itensTable: [],
-          highestIdInstallment: "",
           periodsItens: [{
             id: "",
             periods: {
@@ -87,7 +84,6 @@ function App() {
         <Table
           table={currentTable}
           tables={tables}
-          dateCurrent={dateCurrent}
           expensesTableItems={expensesTableItems}
           expensesPeriodItens={expensesPeriodItens}
           setExpensesPeriodItens={setExpensesPeriodItens}

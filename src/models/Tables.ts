@@ -9,7 +9,6 @@ export class Tables {
             salary: "",
             monthTable: dayTime(),
             itensTable: [],
-            highestIdInstallment: "",
             periodsItens: [{
                 id: "",
                 periods: {

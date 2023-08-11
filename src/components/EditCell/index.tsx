@@ -5,7 +5,6 @@ interface EditCellProps {
     installmentCell: string
     editButton: boolean
     constCell: string
-    setAllertUnsavedChange: React.Dispatch<React.SetStateAction<boolean>>
     onStartEditCell: (setEditButton: React.Dispatch<React.SetStateAction<boolean>>) => void
     onEndEditCell: (event: React.FormEvent<HTMLFormElement> | React.FocusEvent<HTMLInputElement, Element>, setEditButton: React.Dispatch<React.SetStateAction<boolean>>) => void
     setEditButton: React.Dispatch<React.SetStateAction<boolean>>
@@ -15,9 +14,8 @@ interface EditCellProps {
     tagP?: string
 }
 
-const EditCell = ({ installmentCell, editButton, constCell, setAllertUnsavedChange, onStartEditCell, onEndEditCell, setEditButton, setConstCell, maxLength, pattern, tagP }: EditCellProps) => {
+const EditCell = ({ installmentCell, editButton, constCell, onStartEditCell, onEndEditCell, setEditButton, setConstCell, maxLength, pattern, tagP }: EditCellProps) => {
     function blurEditButton(event: React.FocusEvent<HTMLInputElement, Element>){
-        setAllertUnsavedChange(false)
         onEndEditCell(event, setEditButton)
     }
     return (

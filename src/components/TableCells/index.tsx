@@ -18,16 +18,13 @@ interface TableCellsProps {
     paid: boolean
     id: string
     repeat: boolean
-    // setOptionsButtons: React.Dispatch<React.SetStateAction<boolean>>
-    // optionsButtons: boolean
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
     table: IObjectTable
     tables: IObjectTable[]
     setAllTables: (value: React.SetStateAction<IObjectTable[]>) => void
-    setAllertUnsavedChange: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const TableCells = ({ name, value, installment, type, paid, id, repeat, table, tables, setAllTables, setAllertUnsavedChange}: TableCellsProps) => {
+const TableCells = ({ name, value, installment, type, paid, id, repeat, table, tables, setAllTables}: TableCellsProps) => {
+    
     const currentTable = new CurrentTable(table)
 
     const [editButtonName, setEditButtonName] = useState(false)
@@ -54,11 +51,9 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, table, t
 
     function onStartEditCell(setEditButton: React.Dispatch<React.SetStateAction<boolean>>) {
         setEditButton(true)
-        setAllertUnsavedChange(true)
     }
     function onEndEditCell(event: React.FormEvent<HTMLFormElement> | React.FocusEvent<HTMLInputElement, Element>, setEditButton: React.Dispatch<React.SetStateAction<boolean>>) {
         event.preventDefault()
-        setAllertUnsavedChange(false)
         setEditButton(false)
 
         const cellEdited = {
@@ -195,7 +190,6 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, table, t
                             installmentCell={installmentCell}
                             editButton={button.editButton}
                             constCell={button.constCell}
-                            setAllertUnsavedChange={setAllertUnsavedChange}
                             onStartEditCell={button.onStartEditCell}
                             onEndEditCell={button.onEndEditCell}
                             setEditButton={button.setEditButton}

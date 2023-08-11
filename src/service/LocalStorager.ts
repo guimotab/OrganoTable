@@ -9,7 +9,6 @@ export abstract class LocalStorager {
             salary: "",
             monthTable: dayTime(),
             itensTable: [],
-            highestIdInstallment: "",
             periodsItens: [{
               id: "",
               periods: {
