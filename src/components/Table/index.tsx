@@ -21,12 +21,12 @@ interface TableProps {
     setExpensesPeriodItens: React.Dispatch<React.SetStateAction<string[]>>
     setTables: React.Dispatch<React.SetStateAction<IObjectTable[]>>
     setDateCurrent: React.Dispatch<React.SetStateAction<string>>
-    onClick: () => void
+    createNewCell: () => void
     currentSalary: string
     // setCurrentSalary: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Table = ({ table, tables, expensesTableItems, setTables, setDateCurrent, onClick, currentSalary }: TableProps) => {
+const Table = ({ table, tables, expensesTableItems, setTables, setDateCurrent, createNewCell, currentSalary }: TableProps) => {
     const currentTable = new CurrentTable(table)
     const [expensesPeriodItens, setExpensesPeriodItens] = useState<string[]>([])
     const [itensTable, setItensTable] = useState(currentTable.getInformations())
@@ -144,7 +144,7 @@ const Table = ({ table, tables, expensesTableItems, setTables, setDateCurrent, o
                         expensesPeriodItens={expensesPeriodItens}
                         setDateCurrent={setDateCurrent}
                         setExpensesPeriodItens={setExpensesPeriodItens} />
-                    <CreateCell onClick={onClick} />
+                    <CreateCell createNewCell={createNewCell} />
                 </div>
                 <div className='flex flex-col gap-1 w-full scrollbar'>
                     <div className='flex pr-4 pl-24 py-1'>

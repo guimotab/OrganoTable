@@ -57,7 +57,7 @@ function App() {
       return currentTable
     }
   }
-  function newCell() {
+  function createNewCell() {
     setShowPopUp(true)
   }
   function closePopUpClickOut() {
@@ -65,7 +65,6 @@ function App() {
       setShowPopUp(false)
     }
   }
-
   return (
     <div className="grid grid-cols-[14rem_auto] h-screen w-screen">
       <Aside closePopUpClickOut={closePopUpClickOut} />
@@ -89,7 +88,7 @@ function App() {
           setExpensesPeriodItens={setExpensesPeriodItens}
           setTables={setTables}
           setDateCurrent={setDateCurrent}
-          onClick={newCell}
+          createNewCell={createNewCell}
           currentSalary={currentSalary}
         />
         {showPopUp ? <PopUpNewCell

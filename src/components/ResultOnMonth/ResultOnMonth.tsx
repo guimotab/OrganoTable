@@ -14,21 +14,20 @@ interface ResultOnMonth {
 }
 const ResultOnMonth = ({table, expensesTableItems, expensesPeriodItens }: ResultOnMonth) => { 
     const [resultOnMonthValue, setResulOnMonthValue] = useState(resultOnMonth(table.salary, expensesTableItems))
-    
     useEffect(()=>{
         const value = resultOnMonth(table.salary, expensesTableItems)
         setResulOnMonthValue(value)
     },[table, expensesPeriodItens, expensesTableItems])
-
     function resultOnMonth(valueSalary: string, expensesTableItems: number) {
-        
         let salaryFloat = 0
-        valueSalary === "" ? salaryFloat = 0 : salaryFloat = parseFloat(valueSalary)
         let allExpenses = 0
+
+        valueSalary === "" ? salaryFloat = 0 : salaryFloat = parseFloat(valueSalary)
         expensesPeriodItens.forEach(expenses => {
             allExpenses += parseFloat(expenses.replace(',', '.'))
         })
         allExpenses += expensesTableItems
+        
         salaryFloat -= allExpenses
         return salaryFloat
     }
