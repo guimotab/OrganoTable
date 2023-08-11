@@ -24,15 +24,14 @@ interface TableCellsProps {
     table: IObjectTable
     tables: IObjectTable[]
     setAllTables: (value: React.SetStateAction<IObjectTable[]>) => void
-    setAllert: React.Dispatch<React.SetStateAction<boolean>>
-    noButtons?: boolean
+    setAllertUnsavedChange: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const TableCells = ({ name, value, installment, type, paid, id, repeat, table, tables, setAllTables, setAllert, noButtons = false }: TableCellsProps) => {
+const TableCells = ({ name, value, installment, type, paid, id, repeat, table, tables, setAllTables, setAllertUnsavedChange}: TableCellsProps) => {
     const currentTable = new CurrentTable(table)
 
-    const [editButtonName, setEditButtonName] = useState(0)
-    const [editButtonValue, setEditButtonValue] = useState(0)
+    const [editButtonName, setEditButtonName] = useState(false)
+    const [editButtonValue, setEditButtonValue] = useState(false)
     const [optionsButtons, setOptionsButtons] = useState(false)
 
     const [nameCell, setNameCell] = useState(name)
@@ -53,14 +52,14 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, table, t
         setIdCell(id)
     }, [name, value, installment, repeat, type, paid, id])
 
-    function onStartEditCell(setEditButton: React.Dispatch<React.SetStateAction<number>>) {
-        setEditButton(1)
-        setAllert(true)
+    function onStartEditCell(setEditButton: React.Dispatch<React.SetStateAction<boolean>>) {
+        setEditButton(true)
+        setAllertUnsavedChange(true)
     }
-    function onEndEditCell(event: React.FormEvent<HTMLFormElement>, setEditButton: React.Dispatch<React.SetStateAction<number>>) {
+    function onEndEditCell(event: React.FormEvent<HTMLFormElement> | React.FocusEvent<HTMLInputElement, Element>, setEditButton: React.Dispatch<React.SetStateAction<boolean>>) {
         event.preventDefault()
-        setAllert(false)
-        setEditButton(0)
+        setAllertUnsavedChange(false)
+        setEditButton(false)
 
         const cellEdited = {
             name: nameCell,
@@ -196,6 +195,7 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, table, t
                             installmentCell={installmentCell}
                             editButton={button.editButton}
                             constCell={button.constCell}
+                            setAllertUnsavedChange={setAllertUnsavedChange}
                             onStartEditCell={button.onStartEditCell}
                             onEndEditCell={button.onEndEditCell}
                             setEditButton={button.setEditButton}

@@ -8,7 +8,7 @@ import ResultOnMonth from '../ResultOnMonth/ResultOnMonth'
 import { CurrentTable } from '../../models/CurrentTable'
 import IPeriodsItens from '../../shared/IPeriodsItens'
 import { IdTable } from '../../utils/IdTables'
-import { dayTime, findMonth, returnMonthYear } from '../../utils/dayTime'
+import { findMonth, returnMonthYear } from '../../utils/dayTime'
 import { showValue } from '../../utils/createFormatValue'
 import TableCellsPeriods from '../TableCellsPeriods'
 import { Expenses } from '../../models/Expenses'
@@ -17,22 +17,25 @@ interface TableProps {
     table: IObjectTable
     tables: IObjectTable[]
     dateCurrent: string
+    expensesTableItems: number
     expensesPeriodItens: string[]
     setExpensesPeriodItens: React.Dispatch<React.SetStateAction<string[]>>
     setTables: React.Dispatch<React.SetStateAction<IObjectTable[]>>
     setDateCurrent: React.Dispatch<React.SetStateAction<string>>
     onClick: () => void
+    currentSalary: string
+    // setCurrentSalary: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick }: TableProps) => {
+const Table = ({ table, tables, dateCurrent, expensesTableItems, setTables, setDateCurrent, onClick, currentSalary }: TableProps) => {
     const currentTable = new CurrentTable(table)
     const indexCurrentTable = tables.findIndex((table: IObjectTable) => table.monthTable === dateCurrent)
     const [expensesPeriodItens, setExpensesPeriodItens] = useState<string[]>([])
     const [itensTable, setItensTable] = useState(currentTable.getInformations())
     const [periodItens, setPeriodItens] = useState<IPeriodsItens[]>([])
-    const [allert, setAllert] = useState(false)
+    const [allertUnsavedChange, setAllertUnsavedChange] = useState(false)
     const [expenseClass, setExpenseClass] = useState(new Expenses())
-    
+
     useEffect(() => {
         const arrayPeriods = [] as IPeriodsItens[]
         tables.forEach(table => table.periodsItens[0].id === "" ? "" : arrayPeriods.push(...table.periodsItens))
@@ -64,7 +67,7 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
                 table={currentTable.getInformations()}
                 tables={tables}
                 setAllTables={setTables}
-                setAllert={setAllert}
+                setAllertUnsavedChange={setAllertUnsavedChange}
             />
         }
     }
@@ -129,13 +132,11 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
                         paid={item.paid}
                         id={item.id}
                         repeat={item.repeat}
-                        setPeriodItens={setPeriodItens}
                         expenseClass={expenseClass}
                         setExpensesPeriodItens={setExpensesPeriodItens}
                         table={currentTable.getInformations()}
                         tables={tables}
                         setAllTables={setTables}
-                        setAllert={setAllert}
                     />
                 }
             }
@@ -152,48 +153,34 @@ const Table = ({ table, tables, dateCurrent, setTables, setDateCurrent, onClick 
 
     return (
         <div className=' w-full'>
-            {itensTable.itensTable ?
-                <div className='flex flex-col gap-1 w-full'>
-                    <div className='flex flex-col gap-2'>
-                        <div className='flex justify-between h-fit pr-2 pl-24'>
-                            <TableTitle
-                                name={currentTable.monthTable}
-                                setExpenseClass={setExpenseClass}
-                                expensesPeriodItens={expensesPeriodItens}
-                                setDateCurrent={setDateCurrent}
-                                setExpensesPeriodItens={setExpensesPeriodItens} />
-                            <CreateCell onClick={onClick} />
-                        </div>
-                        <div className='flex flex-col gap-1 w-full scrollbar'>
-                            <div className='flex pr-4 pl-24 py-1'>
-                                {titleTr.map((title, index) => <div className={title.width} key={index}>{title.name}</div>)}
-                            </div>
-                            <section className='flex flex-col pr-2 gap-1 max-h-[21rem] overflow-auto '>
-                                {itensTable.itensTable.map((table: ITableItens, index) => renderCells(table, index))}
-                                {periodItens.map((itens, index) => renderEspecialCells(itens.id, index, itens))}
-                            </section>
-                        </div>
+            <div className='flex flex-col gap-1 w-full'>
+                <div className='flex flex-col gap-2'>
+                    <div className='flex justify-between h-fit pr-2 pl-24'>
+                        <TableTitle
+                            name={currentTable.monthTable}
+                            setExpenseClass={setExpenseClass}
+                            expensesPeriodItens={expensesPeriodItens}
+                            setDateCurrent={setDateCurrent}
+                            setExpensesPeriodItens={setExpensesPeriodItens} />
+                        <CreateCell onClick={onClick} />
                     </div>
-                    <ResultOnMonth table={table}
-                        valueSalary={table.salary}
-                        expensesPeriodItens={expensesPeriodItens} />
+                    <div className='flex flex-col gap-1 w-full scrollbar'>
+                        <div className='flex pr-4 pl-24 py-1'>
+                            {titleTr.map((title, index) => <div className={title.width} key={index}>{title.name}</div>)}
+                        </div>
+                        <section className='flex flex-col pr-2 gap-1 max-h-[21rem] overflow-auto '>
+                            {itensTable.itensTable.map((table: ITableItens, index) => renderCells(table, index))}
+                            {periodItens.map((itens, index) => renderEspecialCells(itens.id, index, itens))}
+                        </section>
+                    </div>
                 </div>
-                :
-                <>
-                    <TableTitle
-                        name={dateCurrent}
-                        setExpenseClass={setExpenseClass}
-                        expensesPeriodItens={expensesPeriodItens}
-                        setDateCurrent={setDateCurrent}
-                        setExpensesPeriodItens={setExpensesPeriodItens} />
-                    <CreateCell onClick={onClick} />
-
-                    <table className='flex text-lg font-semibold w-full justify-center'>
-                        Clique no + para criar sua tabela
-                    </table>
-                </>
-            }
-            {allert ? <div className='font-medium text-cor-erro'>*Há alterações não salvas</div> : ""}
+                <ResultOnMonth 
+                table={table}
+                expensesTableItems={expensesTableItems}
+                    valueSalary={currentSalary}
+                    expensesPeriodItens={expensesPeriodItens} />
+            {allertUnsavedChange ? <div className='font-medium text-cor-erro'>*Há alterações não salvas</div> : ""}
+            </div>
         </div>
     )
 }

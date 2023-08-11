@@ -3,18 +3,23 @@ import { FaCheck } from "react-icons/fa"
 
 interface EditCellProps {
     installmentCell: string
-    editButton: number
+    editButton: boolean
     constCell: string
-    onStartEditCell: (setEditButton: React.Dispatch<React.SetStateAction<number>>) => void
-    onEndEditCell: (event: React.FormEvent<HTMLFormElement>, setEditButton: React.Dispatch<React.SetStateAction<number>>) => void
-    setEditButton: React.Dispatch<React.SetStateAction<number>>
+    setAllertUnsavedChange: React.Dispatch<React.SetStateAction<boolean>>
+    onStartEditCell: (setEditButton: React.Dispatch<React.SetStateAction<boolean>>) => void
+    onEndEditCell: (event: React.FormEvent<HTMLFormElement> | React.FocusEvent<HTMLInputElement, Element>, setEditButton: React.Dispatch<React.SetStateAction<boolean>>) => void
+    setEditButton: React.Dispatch<React.SetStateAction<boolean>>
     setConstCell: (value: React.SetStateAction<string>) => void
     maxLength: number
     pattern?: string
     tagP?: string
 }
 
-const EditCell = ({ installmentCell, editButton, constCell, onStartEditCell, onEndEditCell, setEditButton, setConstCell, maxLength, pattern, tagP }: EditCellProps) => {
+const EditCell = ({ installmentCell, editButton, constCell, setAllertUnsavedChange, onStartEditCell, onEndEditCell, setEditButton, setConstCell, maxLength, pattern, tagP }: EditCellProps) => {
+    function blurEditButton(event: React.FocusEvent<HTMLInputElement, Element>){
+        setAllertUnsavedChange(false)
+        onEndEditCell(event, setEditButton)
+    }
     return (
         !editButton ?
             <div className="flex items-center justify-between pl-4 pr-3 w-full">
@@ -39,6 +44,7 @@ const EditCell = ({ installmentCell, editButton, constCell, onStartEditCell, onE
                     type="text"
                     value={constCell}
                     onChange={event => { setConstCell(event.target.value) }}
+                    onBlur={event=> blurEditButton(event)}
                     autoFocus={true}
                     className='px-1 w-full font-medium placeholder:font-medium border-cor-outline'
                     placeholder={constCell}

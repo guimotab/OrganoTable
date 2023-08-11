@@ -36,16 +36,22 @@ const WarningDeleteCell = ({ textP, id, repeat, table, tables, setTables, setOpt
                 const idTable = IdTable.returnIdTable(id)
                 const indexTable = tables.findIndex(table => table.id === idTable)
 
-                if (choiceButtonTypeRepeat === "Todos") {
+                if (choiceButtonTypeRepeat === "Todos") { // se apagar todos 
                     const indexItemTable = tables[indexTable].itensTable.findIndex(item => item.id === id)
+                    const indexPeriodItems = tables[indexTable].periodsItens.findIndex(item => item.id === id)
                     allTables.tables[indexTable].itensTable.splice(indexItemTable, 1)
+                    allTables.tables[indexTable].periodsItens.splice(indexPeriodItems, 1)
+                    allTables.tables[indexTable].periodsItens = currentTable.constructPeriodItems()
                     setTables(deleteTablesUnused(allTables.tables))
                     LocalStorager.saveInformations(tables)
 
                 } else if (choiceButtonTypeRepeat === "Deste em diante") {
                     if(allTables.tables[indexTable].monthTable === currentTable.monthTable){ // se o mês da tabela for igual ao mês do delete
                         const indexItemTable = allTables.tables[indexTable].itensTable.findIndex(item => item.id === id)
+                        const indexPeriodItems = tables[indexTable].periodsItens.findIndex(item => item.id === id)
                         allTables.tables[indexTable].itensTable.splice(indexItemTable, 1)
+                        allTables.tables[indexTable].periodsItens.splice(indexPeriodItems, 1)
+                        allTables.tables[indexTable].periodsItens = currentTable.constructPeriodItems()
                     } else { // se o mês da tabela for diferente ao mês do delete
                         const indexPeriodItem = allTables.tables[indexTable].periodsItens.findIndex(period => period.id === id)
                         const thisTable = allTables.tables[indexTable]

@@ -18,13 +18,13 @@ export class CurrentTable {
     //     this._itensTable = itensTable || []
     //     this._periodsItens = periodsItens = [{ id: "", periods: { type: "", days: [] } }] 
     // }
-    constructor({id, monthTable, salary, itensTable, periodsItens, highestIdInstallment}: IObjectTable) {
+    constructor({ id, monthTable, salary, itensTable, periodsItens, highestIdInstallment }: IObjectTable) {
         this._id = id || "0"
         this._monthTable = monthTable || dayTime()
         this._salary = salary || ""
         this._itensTable = itensTable || []
         this._highestIdInstallment = highestIdInstallment
-        this._periodsItens = periodsItens || [{ id: "", periods: { type: "", days: [] }, lastMonthYear: "" }] 
+        this._periodsItens = periodsItens || [{ id: "", periods: { type: "", days: [] }, lastMonthYear: "" }]
     }
 
     getInformations(): IObjectTable {
@@ -37,6 +37,9 @@ export class CurrentTable {
             highestIdInstallment: this._highestIdInstallment
         }
     }
+    constructPeriodItems() {
+        return [{ id: "", periods: { type: "", days: [] }, lastMonthYear: "" }] as IPeriodsItens[]
+    }
 
     public get id(): string {
         return this._id
@@ -47,7 +50,7 @@ export class CurrentTable {
     public get salary(): string {
         return this._salary
     }
-    public get itensTable(): ITableItens[]{
+    public get itensTable(): ITableItens[] {
         return this._itensTable
     }
     public get periodsItens(): IPeriodsItens[] {
@@ -56,7 +59,7 @@ export class CurrentTable {
     public get highestIdInstallment(): string {
         return this._highestIdInstallment
     }
-    public set id(newId){
+    public set id(newId) {
         this._id = newId
     }
     public set monthTable(newMonthTable) {
@@ -69,8 +72,8 @@ export class CurrentTable {
         this._highestIdInstallment = newIdInstallment
     }
     public set itensTable(newItensTable: ITableItens[]) {
-        if(this._id ==="0"){
-            
+        if (this._id === "0") {
+
             this._id = "1"
             this._itensTable = newItensTable
         } else {
@@ -78,11 +81,17 @@ export class CurrentTable {
         }
     }
     public set periodsItens(newPeriodsItens: IPeriodsItens[]) {
-        
-        if(this._periodsItens[0].id === ""){
-            this._periodsItens = newPeriodsItens
-        } else {
+        try {
+            if (this._periodsItens[0].id === "") {
+                this._periodsItens = newPeriodsItens
+            } else {
+                this.periodsItens.push(...newPeriodsItens)
+            }
+        } catch {
+            this._periodsItens = this.constructPeriodItems()
             this.periodsItens.push(...newPeriodsItens)
         }
     }
+
+
 }

@@ -1,33 +1,37 @@
 import { useEffect, useState } from "react"
 import { CurrentTable } from "../../models/CurrentTable"
 import { IObjectTable } from "../../shared/IObjectTable"
+import { ITableItens } from "../../shared/ITableItens"
 
 interface ResultOnMonth {
     // tables: IObjectTable[]
     table: IObjectTable
+    expensesTableItems: number
     // dateCurrent: string
     valueSalary: string
     expensesPeriodItens: string[]
     // setExpensesPeriodItens: React.Dispatch<React.SetStateAction<string[]>>
 }
-//o fato de reiniciar em julho e agosto, naõ é culpa desse lugar
-const ResultOnMonth = ({table, valueSalary, expensesPeriodItens }: ResultOnMonth) => { 
-    function resultOnMonth(valueSalary: string) {
+const ResultOnMonth = ({table, expensesTableItems, expensesPeriodItens }: ResultOnMonth) => { 
+    const [resultOnMonthValue, setResulOnMonthValue] = useState(resultOnMonth(table.salary, expensesTableItems))
+    
+    useEffect(()=>{
+        const value = resultOnMonth(table.salary, expensesTableItems)
+        setResulOnMonthValue(value)
+    },[table, expensesPeriodItens, expensesTableItems])
+
+    function resultOnMonth(valueSalary: string, expensesTableItems: number) {
+        
         let salaryFloat = 0
         valueSalary === "" ? salaryFloat = 0 : salaryFloat = parseFloat(valueSalary)
         let allExpenses = 0
         expensesPeriodItens.forEach(expenses => {
             allExpenses += parseFloat(expenses.replace(',', '.'))
         })
-        currentTable.itensTable.forEach(expenses => !expenses.repeat ? allExpenses += parseFloat(expenses.value) : "")
+        allExpenses += expensesTableItems
         salaryFloat -= allExpenses
         return salaryFloat
     }
-    const currentTable = new CurrentTable(table)
-    const [resultOnMonthValue, setResulOnMonthValue] = useState(resultOnMonth(valueSalary))
-    useEffect(()=>{
-        setResulOnMonthValue(resultOnMonth(valueSalary))
-    },[valueSalary])
     return (
         <div className='pr-2 pl-24'>
             <h2 className="flex px-4 font-medium text-lg border-2 rounded-lg border-gray-400">

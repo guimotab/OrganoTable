@@ -20,17 +20,16 @@ interface TableCellsPeriodProps {
     paid: boolean
     id: string
     repeat: boolean
-    setPeriodItens: React.Dispatch<React.SetStateAction<IPeriodsItens[]>>
+    // setPeriodItens: React.Dispatch<React.SetStateAction<IPeriodsItens[]>>
     expenseClass: Expenses
     // expensesPeriodItens: string[]
     setExpensesPeriodItens: React.Dispatch<React.SetStateAction<string[]>>
     table: IObjectTable
     tables: IObjectTable[]
     setAllTables: (value: React.SetStateAction<IObjectTable[]>) => void
-    setAllert: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, setPeriodItens, expenseClass, setExpensesPeriodItens, table, tables, setAllTables, setAllert }: TableCellsPeriodProps) => {
+const TableCellsPeriods = ({ name, value, installment, type, paid, id, repeat, expenseClass, setExpensesPeriodItens, table, tables, setAllTables }: TableCellsPeriodProps) => {
     const currentTable = new CurrentTable(table)
 
     const [nameCell, setNameCell] = useState(name)

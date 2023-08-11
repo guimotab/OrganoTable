@@ -8,15 +8,15 @@ interface InputSalaryProps {
     tables: IObjectTable[],
     dateCurrent: string
     setTables: React.Dispatch<React.SetStateAction<IObjectTable[]>>
+    currentSalary: string
+    setCurrentSalary: React.Dispatch<React.SetStateAction<string>>
 }
 
-const InputSalary = ({ table, tables, dateCurrent, setTables }: InputSalaryProps) => {
+const InputSalary = ({ table, tables, dateCurrent, setTables, currentSalary, setCurrentSalary }: InputSalaryProps) => {
     const currentTable = new CurrentTable(table)
     const allTables = new Tables(tables)
 
-    // const indexCurrentTable = allTables.tables.findIndex(object => object.monthTable === dateCurrent)
-
-    const [showSalaryValue, setShowSalaryValue] = useState(currentTable.salary)
+    const [showSalaryValue, setShowSalaryValue] = useState(table.salary)
     const [errorInput, setErrorInput] = useState(false)
     
     useEffect(()=>{
@@ -28,21 +28,19 @@ const InputSalary = ({ table, tables, dateCurrent, setTables }: InputSalaryProps
     function checkInput(event: React.FocusEvent<HTMLInputElement, Element>) {
         let targeValue = event.target.value
         if(targeValue === ""){
-            if(currentTable.salary === ""){
+            if(currentSalary === ""){
                 targeValue = "0,00"
             } else {
-                targeValue = currentTable.salary
+                targeValue = currentSalary
             }
         }
         const valueInput = parseFloat(targeValue.replace(',', '.')).toFixed(2)
 
-        if (!Number.isNaN(valueInput)) {
-            if(currentTable.id === "0"){
-                currentTable.id = `${allTables.highestId() + 1}`
-            }
-            setShowSalaryValue(valueInput.replace('.', ','))
+        if (valueInput !== "NaN") {
             setErrorInput(false)
-            currentTable.salary = valueInput.replace('.', ',')
+            setCurrentSalary(valueInput)
+            setShowSalaryValue(valueInput.replace('.', ','))
+            currentTable.salary = valueInput
             allTables.updateTables(currentTable.monthTable, currentTable.getInformations())
             setTables(allTables.returnTables())
             LocalStorager.saveInformations(tables)
@@ -58,9 +56,8 @@ const InputSalary = ({ table, tables, dateCurrent, setTables }: InputSalaryProps
                     <p className="font-medium">R$</p>
                     {
                         <input
-                            placeholder={currentTable.salary}
+                            placeholder={currentSalary}
                             type="text"
-                            autoFocus
                             maxLength={14}
                             value={showSalaryValue}
                             onChange={event => setShowSalaryValue(event.target.value)}

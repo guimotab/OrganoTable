@@ -23,7 +23,6 @@ const PopUpNewCell = ({ table, dateCurrent, tables, setMouseOutPopUp, setTables 
     const currentTable = new CurrentTable(table)
     const allTables = new Tables(tables)
 
-    // const [installment, setInstallment] = useState(false)
     const [name, setName] = useState("")
     const [value, setValue] = useState("")
     const [type, setType] = useState("Despesas")
@@ -64,7 +63,7 @@ const PopUpNewCell = ({ table, dateCurrent, tables, setMouseOutPopUp, setTables 
     function constructNewCell(lastIdCell: number) {
         let newCell
         const secondId = lastIdCell
-        let idInstallment=""
+        let idInstallment = ""
         if (parseFloat(valueInstallment) > 1) {
             idInstallment = `-${currentTable.id}P${secondId}`
         }
@@ -88,32 +87,50 @@ const PopUpNewCell = ({ table, dateCurrent, tables, setMouseOutPopUp, setTables 
     }
     function submitForm(event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent> | React.FormEvent<HTMLButtonElement>) {
         event.preventDefault()
+        const checked = checkInputs()
+        if (checked) {
 
-        if (currentTable.itensTable[0]) {
-            //atualiza tables
-            const lastPositionCell = currentTable.itensTable.length - 1
-            const lastIdCell = currentTable.itensTable[lastPositionCell].id
-            const idItens = parseFloat(IdTable.returnIdCell(lastIdCell)) + 1
+            if (currentTable.itensTable[0]) {
+                //atualiza tables
+                const lastPositionCell = currentTable.itensTable.length - 1
+                const lastIdCell = currentTable.itensTable[lastPositionCell].id
+                const idItens = parseFloat(IdTable.returnIdCell(lastIdCell)) + 1
 
-            constructObjectPeriodItens(parseFloat(currentTable.id), idItens)
-            const newCell = constructNewCell(parseFloat(IdTable.returnIdCell(lastIdCell)) + 1)
+                constructObjectPeriodItens(parseFloat(currentTable.id), idItens)
+                const newCell = constructNewCell(parseFloat(IdTable.returnIdCell(lastIdCell)) + 1)
 
-            if (parseFloat(valueInstallment) > 1) {
-                createOthersInstallments(valueInstallment, currentTable, allTables, newCell);
+                if (parseFloat(valueInstallment) > 1) {
+                    createOthersInstallments(valueInstallment, currentTable, allTables, newCell);
+                }
+                saveNewInformations(newCell)
+            } else {
+                // cria currentTable inicial
+                const lastIdTable = allTables.highestId()
+                currentTable.id = `${lastIdTable + 1}`
+
+                constructObjectPeriodItens(parseFloat(currentTable.id), 0)
+                const newCell = constructNewCell(0)
+
+                if (parseFloat(valueInstallment) > 1) {
+                    createOthersInstallments(valueInstallment, currentTable, allTables, newCell);
+                }
+                saveNewInformations(newCell)
             }
-            saveNewInformations(newCell)
+        }
+    }
+    function checkInputs() {
+        const checkName = name !== ""
+        const checkValueIsNull = value === ""
+        const checkRepeat = repeat === true && typeRepeat !== "" || repeat === false && typeRepeat === ""
+        let checkTypeAndDayRepeat = true 
+        if(typeRepeat === "Semanalmente" && !daysRepeat[0]) {
+            checkTypeAndDayRepeat = false 
+        }
+        const checkValue = value !== "NaN"
+        if (checkName && checkValue && checkRepeat && checkTypeAndDayRepeat && !checkValueIsNull) {
+            return true
         } else {
-            // cria currentTable inicial
-            const lastIdTable = allTables.highestId()
-            currentTable.id = `${lastIdTable + 1}`
-
-            constructObjectPeriodItens(parseFloat(currentTable.id), 0)
-            const newCell = constructNewCell(0)
-
-            if (parseFloat(valueInstallment) > 1) {
-                createOthersInstallments(valueInstallment, currentTable, allTables, newCell);
-            }
-            saveNewInformations(newCell)
+            return false
         }
     }
     function changeDaysRepeat(event: React.ChangeEvent<HTMLInputElement>, day: string) {
