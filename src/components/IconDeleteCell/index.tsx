@@ -22,7 +22,7 @@ const IconDeleteCell = ({ table, tables, setAllTables, optionsButtons, setOption
         <>
             {optionsButtons ?
                 <div className='flex flex-col justify-center'>
-                    <div className='flex justify-end w-24' onMouseEnter={event => setOptionsButtons(true)} onMouseLeave={event => setOptionsButtons(false)}>
+                    <div className='flex justify-end w-12' onMouseEnter={event => setOptionsButtons(true)} onMouseLeave={event => setOptionsButtons(false)}>
                         <div onMouseLeave={event => setShowWarningDelete(false)} className='text-cor-terciaria pb-1 px-3'>
                             <BsTrash3Fill
                                 size={21}
@@ -46,7 +46,7 @@ const IconDeleteCell = ({ table, tables, setAllTables, optionsButtons, setOption
                     }
                 </div>
                 :
-                <div className='w-24'></div>
+                <div className='w-12'></div>
             }
         </>
     )

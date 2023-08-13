@@ -12,12 +12,15 @@ import { findMonth, returnMonthYear } from '../../utils/dayTime'
 import { showValue } from '../../utils/createFormatValue'
 import TableCellsPeriods from '../TableCellsPeriods'
 import { Expenses } from '../../models/Expenses'
+import PopUpNewCell from '../PopUpNewCell'
 
 interface TableProps {
     table: IObjectTable
     tables: IObjectTable[]
+    showPopUp: boolean
     expensesTableItems: number
     expensesPeriodItens: string[]
+    setMouseOutPopUp: React.Dispatch<React.SetStateAction<boolean>>
     setExpensesPeriodItens: React.Dispatch<React.SetStateAction<string[]>>
     setTables: React.Dispatch<React.SetStateAction<IObjectTable[]>>
     setDateCurrent: React.Dispatch<React.SetStateAction<string>>
@@ -26,7 +29,7 @@ interface TableProps {
     // setCurrentSalary: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Table = ({ table, tables, expensesTableItems, setTables, setDateCurrent, createNewCell, currentSalary }: TableProps) => {
+const Table = ({ table, tables, showPopUp, expensesTableItems, setMouseOutPopUp, setTables, setDateCurrent, createNewCell, currentSalary }: TableProps) => {
     const currentTable = new CurrentTable(table)
     const [expensesPeriodItens, setExpensesPeriodItens] = useState<string[]>([])
     const [itensTable, setItensTable] = useState(currentTable.getInformations())
@@ -137,17 +140,29 @@ const Table = ({ table, tables, expensesTableItems, setTables, setDateCurrent, c
     return (
         <div className='flex flex-col gap-1 w-full'>
             <div className='flex flex-col gap-2'>
-                <div className='flex justify-between h-fit pr-2 pl-24'>
+                <div className='flex justify-between h-fit pr-2 pl-12'>
                     <TableTitle
                         name={currentTable.monthTable}
                         setExpenseClass={setExpenseClass}
                         expensesPeriodItens={expensesPeriodItens}
                         setDateCurrent={setDateCurrent}
                         setExpensesPeriodItens={setExpensesPeriodItens} />
-                    <CreateCell createNewCell={createNewCell} />
+                    <div className='flex flex-col'>
+                        <div className='flex justify-end'>
+                            <CreateCell createNewCell={createNewCell} />
+                        </div>
+                        <div className='mr-[33rem]'>
+                            {showPopUp ? <PopUpNewCell
+                                dateCurrent={currentTable.monthTable}
+                                tables={tables}
+                                table={currentTable}
+                                setMouseOutPopUp={setMouseOutPopUp}
+                                setTables={setTables} /> : <></>}
+                        </div>
+                    </div>
                 </div>
                 <div className='flex flex-col gap-1 w-full scrollbar'>
-                    <div className='flex pr-4 pl-24 py-1'>
+                    <div className='flex pr-4 pl-12 py-1'>
                         {titlesTable.map((title, index) => <div className={title.width} key={index}>{title.name}</div>)}
                     </div>
                     <section className='flex flex-col pr-2 gap-1 max-h-[21rem] overflow-auto '>

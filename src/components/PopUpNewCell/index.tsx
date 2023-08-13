@@ -8,14 +8,12 @@ import { CurrentTable } from '../../models/CurrentTable'
 import { Tables } from '../../models/Tables'
 import { ITableItens } from '../../shared/ITableItens'
 import { createOthersInstallments } from '../../utils/installmentOrganizer'
-import { log } from 'console'
+import InputSelect from '../InputSelect'
 
 interface PopUpProps {
     table: IObjectTable
     dateCurrent: string
     tables: IObjectTable[]
-    // expensesPeriodItens: string[]
-    // setExpensesPeriodItens: React.Dispatch<React.SetStateAction<string[]>>
     setMouseOutPopUp: React.Dispatch<React.SetStateAction<boolean>>
     setTables: React.Dispatch<React.SetStateAction<IObjectTable[]>>
 }
@@ -30,10 +28,8 @@ const PopUpNewCell = ({ table, dateCurrent, tables, setMouseOutPopUp, setTables 
     const [repeat, setRepeat] = useState(false)
     const [checkInstallment, setCheckInstallment] = useState(false)
     const [checkRepeat, setCheckRepeat] = useState(false)
-
     const [typeRepeat, setTypeRepeat] = useState("")
     const [daysRepeat, setDaysRepeat] = useState<string[]>([])
-
 
     function constructObjectPeriodItens(idTable: number, idItens: number) {
         if (repeat) {
@@ -122,9 +118,9 @@ const PopUpNewCell = ({ table, dateCurrent, tables, setMouseOutPopUp, setTables 
         const checkName = name !== ""
         const checkValueIsNull = value === ""
         const checkRepeat = repeat === true && typeRepeat !== "" || repeat === false && typeRepeat === ""
-        let checkTypeAndDayRepeat = true 
-        if(typeRepeat === "Semanalmente" && !daysRepeat[0]) {
-            checkTypeAndDayRepeat = false 
+        let checkTypeAndDayRepeat = true
+        if (typeRepeat === "Semanalmente" && !daysRepeat[0]) {
+            checkTypeAndDayRepeat = false
         }
         const checkValue = value !== "NaN"
         if (checkName && checkValue && checkRepeat && checkTypeAndDayRepeat && !checkValueIsNull) {
@@ -242,77 +238,50 @@ const PopUpNewCell = ({ table, dateCurrent, tables, setMouseOutPopUp, setTables 
             onclick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => changeTypeRepeat("Anualmente")
         },
     ]
-    const optionsSelectInput = [
-        { label: "Despesas" },
-        { label: "Investimento" },
-        { label: "Beleza" },
-        { label: "Saúde" },
-        { label: "Outros" }
+    const inputSelect = [
+        {
+            label: "Tipo",
+            colStart: "1",
+            widthClassName: "w-36",
+            onChange: (event: React.ChangeEvent<HTMLSelectElement>) => setType(event.target.value)
+        },
+        {
+            label: "Parcelado",
+            colStart: "2",
+            widthClassName: "w-24",
+            onChange: (event: React.ChangeEvent<HTMLSelectElement>) => changeValueInstallment(event),
+            checkRepeat: checkRepeat
+        }
     ]
-    let installmentSelectInput
-    if (checkRepeat) {
-        installmentSelectInput = [
-            { label: "1/1" }
-        ]
-    } else {
-        installmentSelectInput = [
-            { label: "1/1" },
-            { label: "1/2" },
-            { label: "1/3" },
-            { label: "1/4" },
-            { label: "1/5" },
-            { label: "1/6" },
-            { label: "1/7" },
-            { label: "1/8" },
-            { label: "1/9" },
-            { label: "1/10" },
-            { label: "1/11" },
-            { label: "1/12" }
-        ]
-    }
     return (
         <div
             onMouseLeave={() => setMouseOutPopUp(true)}
             onMouseEnter={() => setMouseOutPopUp(false)}
-            className="absolute shadow-2xl border border-cor-secundaria rounded-xl bg-white px-9 py-9 h-fit w-[35rem] top-40 left-[46rem]">
+            className="absolute shadow-2xl border border-cor-secundaria rounded-xl bg-white p-9 h-fit w-[35rem] top-48">
             <form
                 onSubmit={event => submitForm(event)}
                 className='grid grid-cols-2 grid-rows-[auto]'>
-                <div className='flex pb-4'>
-                    {formInput.map((input, index) => <FormInput
-                        key={index}
-                        label={input.label}
-                        type={input.type}
-                        value={input.value}
-                        minLength={input.minLength}
-                        maxLength={input.maxLength}
-                        onChange={input.onChange}
-                        onBlur={input.onBlur}
-                        pattern={input.pattern}
-                        required={input.required}
-                        tagP={input.tagP}
-                    />)}
-                </div>
-                <div className='flex col-start-1 row-start-2 items-center justify-start gap-2 pb-4'>
-                    <label className='font-medium'>Tipo: </label>
-                    <select
-                        onChange={event => setType(event.target.value)}
-                        className='w-36 rounded-md border-2 border-gray-300 font-medium focus:border-cor-secundaria outline-none'>
-                        {optionsSelectInput.map((option, index) =>
-                            <option key={index} className='font-medium'>{option.label}</option>
-                        )}
-                    </select>
-                </div>
-                <div className='flex col-start-2 row-start-2 items-center justify-start gap-2 pb-4'>
-                    <label className=' font-medium'>Parcelado: </label>
-                    <select
-                        onChange={event => changeValueInstallment(event)}
-                        className='w-24 rounded-md py-0.5 border-2 border-gray-300 font-medium focus:border-cor-secundaria outline-none'>
-                        {installmentSelectInput.map((option, index) =>
-                            <option key={index} className='font-medium'>{option.label}</option>
-                        )}
-                    </select>
-                </div>
+                {formInput.map((input, index) => <FormInput
+                    key={index}
+                    label={input.label}
+                    type={input.type}
+                    value={input.value}
+                    minLength={input.minLength}
+                    maxLength={input.maxLength}
+                    onChange={input.onChange}
+                    onBlur={input.onBlur}
+                    pattern={input.pattern}
+                    required={input.required}
+                    tagP={input.tagP}
+                />)}
+                {inputSelect.map((input, index) => <InputSelect
+                    key={index}
+                    label={input.label}
+                    colStart={input.colStart}
+                    widthClassName={input.widthClassName}
+                    onChange={input.onChange}
+                    checkRepeat={input.checkRepeat}/>) 
+                }
                 {!checkInstallment ?
                     <div className='flex items-center row-start-3 gap-1 pb-2'>
                         <label className='font-medium'>Repetir</label>
@@ -345,8 +314,8 @@ const PopUpNewCell = ({ table, dateCurrent, tables, setMouseOutPopUp, setTables 
                                 <input type='checkbox' onChange={(event) => days.onChange(event)} />
                             </div>
                         )}
-                    </div>
-                    : <></>}
+                    </div> : <></>
+                }
                 <div className='flex justify-center row-start-6 col-span-2'>
                     <button
                         type='submit'
@@ -356,7 +325,6 @@ const PopUpNewCell = ({ table, dateCurrent, tables, setMouseOutPopUp, setTables 
                     </button>
                 </div>
             </form>
-
         </div >
     )
 }

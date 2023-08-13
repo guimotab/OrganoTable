@@ -17,7 +17,7 @@ function App() {
   const [expensesPeriodItens, setExpensesPeriodItens] = useState<string[]>([])
   const [expensesTableItems, setExpensesTableItems] = useState(createExpensesTableItems())
   const [mouseOutPopUp, setMouseOutPopUp] = useState(true)
-  
+
   useEffect(() => {
     setExpensesTableItems(createExpensesTableItems())
   }, [tables, dateCurrent, expensesPeriodItens])
@@ -66,12 +66,15 @@ function App() {
     }
   }
   return (
-    <div className="grid grid-cols-[14rem_auto] h-screen w-screen">
-      <Aside closePopUpClickOut={closePopUpClickOut} />
-      <div
-        onClick={closePopUpClickOut}
-        className='col-start-2 flex flex-col pr-20 pt-14 gap-5 overflow-hidden w-[68rem]'>
-        <div className='pl-24'>
+    <div className='flex flex-col items-center h-screen w-screen'
+      onClick={closePopUpClickOut}>
+      <div className='flex justify-center w-full bg-cor-terciaria py-5'>
+        <p className='text-white font-bold text-2xl mr-[50rem]'>
+          OrganoTable
+        </p>
+      </div>
+      <div className='flex flex-col pt-4 gap-1 overflow-hidden w-[61rem]'>
+        <div className='pl-12'>
           <InputSalary
             table={currentTable}
             tables={tables}
@@ -83,20 +86,17 @@ function App() {
         <Table
           table={currentTable}
           tables={tables}
+          showPopUp={showPopUp}
           expensesTableItems={expensesTableItems}
           expensesPeriodItens={expensesPeriodItens}
+          setMouseOutPopUp={setMouseOutPopUp}
           setExpensesPeriodItens={setExpensesPeriodItens}
           setTables={setTables}
           setDateCurrent={setDateCurrent}
           createNewCell={createNewCell}
           currentSalary={currentSalary}
         />
-        {showPopUp ? <PopUpNewCell
-          dateCurrent={dateCurrent}
-          tables={tables}
-          table={currentTable}
-          setMouseOutPopUp={setMouseOutPopUp}
-          setTables={setTables} /> : <></>}
+        
       </div>
     </div>
   );

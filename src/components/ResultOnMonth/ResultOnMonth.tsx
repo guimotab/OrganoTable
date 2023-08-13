@@ -32,7 +32,7 @@ const ResultOnMonth = ({table, expensesTableItems, expensesPeriodItens }: Result
         return salaryFloat
     }
     return (
-        <div className='pr-2 pl-24'>
+        <div className='pr-2 pl-12'>
             <h2 className="flex px-4 font-medium text-lg border-2 rounded-lg border-gray-400">
                 Total no mês: R${resultOnMonthValue.toFixed(2).replace('.', ',')}
             </h2>

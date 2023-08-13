@@ -86,7 +86,7 @@ const WarningDeleteCell = ({ textP, id, repeat, table, tables, setTables, setOpt
         <div
             onMouseEnter={event => showWarnings()}
             onMouseLeave={event => hideWarnings()}
-            className="flex flex-col absolute bg-cor-terciaria text-white mt-24 ml-10 px-5 pt-2 pb-3 gap-1 rounded-lg">
+            className="flex flex-col absolute bg-cor-terciaria text-white mt-[5.5rem] px-5 py-2 rounded-lg">
             {textP === "Você tem certeza?" ?
                 <>
                     <p className="flex justify-center">{textP}</p>

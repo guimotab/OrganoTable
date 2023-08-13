@@ -23,8 +23,8 @@ interface TableCellsProps {
     setAllTables: (value: React.SetStateAction<IObjectTable[]>) => void
 }
 
-const TableCells = ({ name, value, installment, type, paid, id, repeat, table, tables, setAllTables}: TableCellsProps) => {
-    
+const TableCells = ({ name, value, installment, type, paid, id, repeat, table, tables, setAllTables }: TableCellsProps) => {
+
     const currentTable = new CurrentTable(table)
 
     const [editButtonName, setEditButtonName] = useState(false)
@@ -180,8 +180,7 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, table, t
                 repeatCell={repeatCell}
                 textP={"Você tem certeza?"}
             />
-            <div
-                className='flex flex-grow border-2 rounded-lg border-cor-secundaria py-1.5'
+            <div className='flex flex-grow border-2 rounded-lg border-cor-secundaria py-1.5'
                 onMouseEnter={event => setOptionsButtons(true)}
                 onMouseLeave={event => setOptionsButtons(false)}>
                 {editButtons.map((button, index) =>
@@ -203,29 +202,25 @@ const TableCells = ({ name, value, installment, type, paid, id, repeat, table, t
                 <div className='flex justify-center w-28 border-gray-300 border-r-2'>
                     <p className='font-medium'>{installmentCell}</p>
                 </div>
-                {
-                    installmentCell === "1/1" ?
-                        <div className='flex justify-start px-4 w-44 border-gray-300 border-r-2'>
-                            <select onChange={event => changeTypeInput(event, typeCell)} value={typeCell} className='w-40 font-medium'>
-                                {optionsSelectInput.map((option, index) =>
-                                    <option key={index} className='font-medium'>{option.label}</option>
-                                )}
-                            </select>
-                        </div>
-                        :
-                        <div className='flex justify-center w-44 border-gray-300 border-r-2'>
-                            <p className='font-medium'>{typeCell}</p>
-                        </div>
+                {installmentCell === "1/1" ?
+                    <div className='flex justify-start px-4 w-44 border-gray-300 border-r-2'>
+                        <select onChange={event => changeTypeInput(event, typeCell)} value={typeCell} className='w-40 font-medium'>
+                            {optionsSelectInput.map((option, index) =>
+                                <option key={index} className='font-medium'>{option.label}</option>
+                            )}
+                        </select>
+                    </div>
+                    :
+                    <div className='flex justify-center w-44 border-gray-300 border-r-2'>
+                        <p className='font-medium'>{typeCell}</p>
+                    </div>
                 }
                 <div className='flex flex-grow text-center justify-center'>
-                    {
-                        <input
-                            type="checkbox"
-                            checked={paidCell}
-                            onChange={event => changeChecked(event)}
-                            className='flex self-center'
-                        />
-                    }
+                    <input type="checkbox"
+                        checked={paidCell}
+                        onChange={event => changeChecked(event)}
+                        className='flex self-center'
+                    />
                 </div>
             </div >
         </div>
