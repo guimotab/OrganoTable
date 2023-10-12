@@ -1,13 +1,48 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  table, td, th, tr{
+    @apply border-solid border-2 border-gray-400
+  }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@layer components {
+
+  /* geral */
+  .animacao-carregar {
+    @apply inline-block w-3 h-3 bg-white mx-1 rounded-full
+  }
+}
+
+@layer utilities {
+  .scrollbar ::-webkit-scrollbar {
+    width: 8px;
+    padding: 12rem 0;
+  }
+  .scrollbar ::-webkit-scrollbar-track {
+    background: #2f598044;        /* color of the tracking area */
+    border-radius: 4px;
+  }
+  /* .scrollbar ::-webkit-scrollbar-track-piece {
+    background: #406ea3;      
+  } */
+
+  .scrollbar ::-webkit-scrollbar-thumb {
+    background: #0f4583;
+    border-radius: 4px;
+  }
+  body {
+    scrollbar-width: thin;
+    scrollbar-color: #0f4583 #406ea3;
+  }
+
+  .autocomplete input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-text-fill-color: inherit;
+    transition: background-color 0s ease-in-out 5000s;
+  }
 }
