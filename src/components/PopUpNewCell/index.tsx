@@ -16,7 +16,11 @@ import usePeriodItens from "../../state/hooks/usePeriodItens"
 import { useUpdatePeriodItens } from "../../state/hooks/useUpdatePeriodItens"
 import { createOthersInstallments } from "../../utils/installmentOrganizer"
 
-const PopUpNewCell = () => {
+interface PopUpNewCellProps{
+    setOpenPopUp: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const PopUpNewCell = ({setOpenPopUp}: PopUpNewCellProps) => {
     const allTables = new Tables(useTablesInformations())
     const setAllTables = useUpdateAllTables()
     const dateCurrent = useCurrentMonth()
@@ -104,7 +108,6 @@ const PopUpNewCell = () => {
         event.preventDefault()
         if (checkInputs()) {
             if (currentTable.itensTable[0]) {
-                //atualiza tables
                 const lastPositionCell = currentTable.itensTable.length - 1
                 const lastIdCell = currentTable.itensTable[lastPositionCell].id
                 const newCell = constructNewCell(parseFloat(IdTable.returnIdCell(lastIdCell)) + 1)
@@ -117,7 +120,9 @@ const PopUpNewCell = () => {
                 saveNewInformations(newCell)
             } else {
                 const highestId = allTables.highestId()
-                currentTable.id = `${highestId + 1}`
+                if(currentTable.id === "0"){
+                    currentTable.id = `${highestId + 1}`
+                }
                 const newCell = constructNewCell(1)
                 if (newCell.repeat) {
                     constructObjectPeriodItens(newCell.id)
@@ -127,6 +132,7 @@ const PopUpNewCell = () => {
                 }
                 saveNewInformations(newCell)
             }
+            setOpenPopUp(false)
         }
     }
     function changeValueInstallment(event: React.ChangeEvent<HTMLSelectElement>) {
@@ -243,11 +249,9 @@ const PopUpNewCell = () => {
         },
     ]
     return (
-        <div className='relative mr-[33rem] z-10'>
-            <div className="absolute shadow-2xl border border-cor-secundaria rounded-xl bg-white p-9 h-fit w-[35rem] top-4">
-                <form
-                    //onSubmit={event => submitForm(event)}
-                    className='grid grid-cols-2 grid-rows-[auto]'>
+        <div className='mr-[33rem] z-10'>
+            <div className="absolute shadow-2xl border border-cor-secundaria rounded-xl bg-white p-9 h-fit w-[35rem] top-40">
+                <form className='grid grid-cols-2 grid-rows-[auto]'>
                     {formInput.map((input, index) => <FormInputText
                         key={index}
                         label={input.label}

@@ -33,8 +33,8 @@ const WarningDeleteCell = ({ textP, idCell, setShowWarningDelete }: WarningDelet
                 const thisTable = new CurrentTable(allTables.tables[indexTable])
                 const indexItem = thisTable.itensTable.findIndex(item => item.id.split("-")[1] === idCell.split("-")[1])
                 thisTable.itensTable.splice(indexItem, 1)
-                indexTable = allTables.tables.findIndex(table => table.itensTable.find(item => item.id.split("-")[1] === idCell.split("-")[1]))
                 allTables.updateTables(thisTable.monthTable, thisTable.getInformations())
+                indexTable = allTables.tables.findIndex(table => table.itensTable.find(item => item.id.split("-")[1] === idCell.split("-")[1]))
             }
             updateAllTables(allTables.tables)
             LocalStorager.saveTablesInformations(allTables.tables)
@@ -45,6 +45,7 @@ const WarningDeleteCell = ({ textP, idCell, setShowWarningDelete }: WarningDelet
             updateAllTables(allTables.tables)
             LocalStorager.saveTablesInformations(allTables.tables)
         }
+        setShowWarningDelete(false)
     }
     function deleteAllSameCells() {
         const idTable = IdTable.returnIdTable(idCell)
@@ -59,6 +60,8 @@ const WarningDeleteCell = ({ textP, idCell, setShowWarningDelete }: WarningDelet
         updateAllTables(allTables.tables)
         LocalStorager.savePeriodItens(periodItens.periodItens)
         LocalStorager.saveTablesInformations(allTables.tables)
+        setShowWarningDelete(false)
+
     }
     function deleteAllSameCellsFromThis() {
         const idTable = IdTable.returnIdTable(idCell)
@@ -78,6 +81,7 @@ const WarningDeleteCell = ({ textP, idCell, setShowWarningDelete }: WarningDelet
         updateAllTables(allTables.tables)
         LocalStorager.savePeriodItens(periodItens.periodItens)
         LocalStorager.saveTablesInformations(allTables.tables)
+        setShowWarningDelete(false)
     }
     return (
         <div

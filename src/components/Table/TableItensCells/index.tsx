@@ -9,6 +9,7 @@ import { Tables } from "../../../models/Tables"
 import { useUpdateAllTables } from "../../../state/hooks/useUpdateAllTables"
 import { LocalStorager } from "../../../service/LocalStorager"
 import { CurrentTable } from "../../../models/CurrentTable"
+import { IdTable } from "../../../utils/IdTables"
 
 interface TableItensCellsProps {
     tableItens: ITableItens
@@ -46,6 +47,28 @@ const TableItensCells = ({ tableItens }: TableItensCellsProps) => {
         setUpdateTables(allTables.tables)
         LocalStorager.saveTablesInformations(allTables.tables)
     }
+    function updateAllInstallments(valueInput: string = typeCell) {
+        const quantity = parseFloat(installmentCell.split('/')[1]) // 1/2
+        const idOriginalTable = idCell.split("-")[1]
+        for (let i = 0; i < quantity; i++) {
+            const indexThisTable = allTables.tables.findIndex(table => parseFloat(table.id) === parseFloat(idOriginalTable.split("P")[0]) + i)
+            const thisTable = new CurrentTable(allTables.tables[indexThisTable])
+            const indexThisItens = thisTable.itensTable.findIndex(item => item.id.split("-")[1] === idOriginalTable)
+            const newCell = {
+                name: nameCell,
+                value: createFormatValue(valueCell, setValueCell),
+                installment: thisTable.itensTable[indexThisItens].installment,
+                repeat: thisTable.itensTable[indexThisItens].repeat,
+                type: valueInput,
+                paid: thisTable.itensTable[indexThisItens].paid,
+                id: thisTable.itensTable[indexThisItens].id
+            } as ITableItens
+            thisTable.itensTable[indexThisItens] = newCell
+            allTables.updateTables(thisTable.monthTable, thisTable.getInformations())
+            setUpdateTables(allTables.tables)
+        }
+        LocalStorager.saveTablesInformations(allTables.tables)
+    }
     function changeTypeInput(event: React.ChangeEvent<HTMLSelectElement>) {
         const valueInput = event.target.value
         setTypeCell(valueInput)
@@ -58,6 +81,9 @@ const TableItensCells = ({ tableItens }: TableItensCellsProps) => {
             paid: paidCell,
             id: idCell
         } as ITableItens
+        if (installmentCell !== "1/1") {
+            updateAllInstallments(valueInput)
+        }
         saveInformations(cellEdited)
     }
     function changeChecked(event: React.ChangeEvent<HTMLInputElement>) {
@@ -85,6 +111,9 @@ const TableItensCells = ({ tableItens }: TableItensCellsProps) => {
             paid: paidCell,
             id: idCell
         } as ITableItens
+        if (installmentCell !== "1/1") {
+            updateAllInstallments()
+        }
         saveInformations(cellEdited)
     }
     const optionsSelectInput = [
@@ -96,25 +125,15 @@ const TableItensCells = ({ tableItens }: TableItensCellsProps) => {
     ]
     return (
         <div className='flex' onMouseEnter={event => setIconDeleteCell(true)} onMouseLeave={event => setIconDeleteCell(false)}>
-            <div className="absolute -left-1 flex w-10 h-10 items-center justify-start">
-                {iconDeleteCell ?
-                    <DeleteCell
-                        //setIconDeleteCell={setIconDeleteCell}
-                        idCell={idCell}
-                        //repeatCell={repeatCell}
-                        textP={"Você tem certeza?"}
-                    />
-                    : <></>
-                }
-            </div>
-            <div className='flex flex-grow border-2 rounded-lg border-cor-secundaria py-1.5'>
+            <DeleteCell idCell={idCell} iconDeleteCell={iconDeleteCell} textP={"Você tem certeza?"} />
+            <div className='flex flex-grow border-2 rounded-lg border-cor-secundaria py-1.5 hover:border-cor-terciaria'>
                 <div className="flex justify-center w-[18rem] border-gray-300 border-r-2 px-2">
                     <input
                         type="text"
                         value={nameCell}
                         onChange={event => { setNameCell(event.target.value) }}
                         onBlur={event => onEndEditCell(event)}
-                        className='px-2 w-full font-medium placeholder:font-medium border-cor-outline'
+                        className='px-2 w-full font-medium placeholder:font-medium border-cor-outline cursor-pointer'
                         placeholder={nameCell}
                         maxLength={24}
                         pattern="^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$"
@@ -126,7 +145,7 @@ const TableItensCells = ({ tableItens }: TableItensCellsProps) => {
                         value={valueCell}
                         onChange={event => { setValueCell(event.target.value) }}
                         onBlur={event => onEndEditCell(event)}
-                        className='px-2 w-full font-medium placeholder:font-medium border-cor-outline'
+                        className='px-2 w-full font-medium placeholder:font-medium border-cor-outline cursor-pointer'
                         placeholder={valueCell}
                         maxLength={12}
                         pattern="^(\d+)(\,|\.)(\d{2})?$"
@@ -135,19 +154,13 @@ const TableItensCells = ({ tableItens }: TableItensCellsProps) => {
                 <div className='flex justify-center w-28 border-gray-300 border-r-2'>
                     <p className='font-medium'>{installmentCell}</p>
                 </div>
-                {installmentCell === "1/1" ?
-                    <div className='flex justify-start px-4 w-44 border-gray-300 border-r-2'>
-                        <select onChange={event => changeTypeInput(event)} value={typeCell} className='w-40 font-medium'>
-                            {optionsSelectInput.map((option, index) =>
-                                <option key={index} className='font-medium'>{option.label}</option>
-                            )}
-                        </select>
-                    </div>
-                    :
-                    <div className='flex justify-center w-44 border-gray-300 border-r-2'>
-                        <p className='font-medium'>{typeCell}</p>
-                    </div>
-                }
+                <div className='flex justify-start px-4 w-44 border-gray-300 border-r-2'>
+                    <select onChange={event => changeTypeInput(event)} value={typeCell} className='w-40 font-medium cursor-pointer'>
+                        {optionsSelectInput.map((option, index) =>
+                            <option key={index} className='font-medium'>{option.label}</option>
+                        )}
+                    </select>
+                </div>
                 <div className='flex flex-grow text-center justify-center'>
                     <input type="checkbox"
                         checked={paidCell}

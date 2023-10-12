@@ -27,7 +27,6 @@ const PeriodItensCells = ({ periodItens }: PeriodItensCellsProps) => {
     const [repeatCell, setRepeatCell] = useState(findItem.repeat)
     const [typeCell, setTypeCell] = useState(findItem.type)
     const [idCell, setIdCell] = useState(findItem.id)
-    const [optionsButtons, setOptionsButtons] = useState(false)
 
     const [iconDeleteCell, setIconDeleteCell] = useState(false)
 
@@ -88,7 +87,22 @@ const PeriodItensCells = ({ periodItens }: PeriodItensCellsProps) => {
         }
         return false
     }
-
+    const editableCells = [
+        {
+            constCell: nameCell,
+            justifyCell: "justify-start",
+            classDiv: "flex w-[18rem] border-gray-300 border-r-2"
+        }, {
+            constCell: valueCell,
+            justifyCell: "justify-start",
+            tagP: "R$",
+            classDiv: "flex w-60 border-gray-300 border-r-2"
+        }, {
+            constCell: typeCell,
+            justifyCell: "justify-center",
+            classDiv: "flex w-44 border-gray-300 border-r-2"
+        }
+    ]
     const cells = [
         {
             constCell: nameCell,
@@ -113,23 +127,8 @@ const PeriodItensCells = ({ periodItens }: PeriodItensCellsProps) => {
         <>
             {verifyIfCanConstruct() ?
                 <div className='flex' onMouseEnter={event => setIconDeleteCell(true)} onMouseLeave={event => setIconDeleteCell(false)}>
-                    <div className="absolute -left-1 flex w-10 h-10 items-center justify-start">
-                        {iconDeleteCell ?
-                            <DeleteCell
-                                //optionsButtons={optionsButtons}
-                                //setOptionsButtons={setOptionsButtons}
-                                idCell={idCell}
-                                //repeatCell={repeatCell}
-                                textP={"Você deseja excluir:"}
-                            />
-                            : <></>
-                        }
-
-                    </div>
-                    <div className="flex flex-grow border-2 rounded-lg border-cor-secundaria py-1.5"
-                    //onMouseEnter={event => setOptionsButtons(true)}
-                    //onMouseLeave={event => setOptionsButtons(false)}
-                    >
+                    <DeleteCell idCell={idCell} iconDeleteCell={iconDeleteCell} textP={"Você deseja excluir:"}/>
+                    <div className="flex flex-grow border-2 rounded-lg border-cor-secundaria py-1.5 hover:border-cor-terciaria">
                         {cells.map((cell, index) =>
                             <div className={cell.classDiv} key={index}>
                                 <CellsPeriodItens constCell={cell.constCell} tagP={cell.tagP} justifyCell={cell.justifyCell} />

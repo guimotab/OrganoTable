@@ -1,8 +1,6 @@
 import useCurrentMonth from "../../state/hooks/useCurrentTableMonth"
 import useTablesInformations from "../../state/hooks/useTablesInformations"
 import RemainingSalary from "../RemainingSalary"
-import CreateTableCell from "./CreateTableCell"
-import TableCurrentMonth from "./TableCurrentMonth"
 import findCurrentTable from "../../utils/findCurrentTable"
 import { ITableItens } from "../../shared/interfaces/ITableItens"
 import TableItensCells from "./TableItensCells"
@@ -25,26 +23,20 @@ const Table = () => {
 
     return (
         <div className='relative flex flex-col gap-1 w-full max-w-6xl px-10'>
-            <div className='flex flex-col gap-2'>
-                <div className='flex justify-between h-fit'>
-                    <TableCurrentMonth />
-                    <CreateTableCell />
+            <div className='flex flex-col gap-1 w-full scrollbar'>
+                <div className='flex py-1'>
+                    {titlesTable.map((title, index) => <div className={title.width} key={index}>{title.name}</div>)}
                 </div>
-                <div className='flex flex-col gap-1 w-full scrollbar'>
-                    <div className='flex py-1'>
-                        {titlesTable.map((title, index) => <div className={title.width} key={index}>{title.name}</div>)}
-                    </div>
-                    <section className='flex flex-col gap-1 max-h-[21rem] overflow-auto '>
-                        {currentTable.itensTable.map((tableItens: ITableItens, index: number) =>
-                            !tableItens.repeat ?
-                                <TableItensCells key={index} tableItens={tableItens} />
-                                : <></>)}
-                        {periodItens[0] ?
-                            periodItens.map((periodItens: IPeriodsItens, index: number) =>
-                                <PeriodItensCells key={index} periodItens={periodItens} />)
-                            : ""}
-                    </section>
-                </div>
+                <section className='flex flex-col gap-1 max-h-[27rem] overflow-auto '>
+                    {currentTable.itensTable.map((tableItens: ITableItens, index: number) =>
+                        !tableItens.repeat ?
+                            <TableItensCells key={index} tableItens={tableItens} />
+                            : <></>)}
+                    {periodItens[0] ?
+                        periodItens.map((periodItens: IPeriodsItens, index: number) =>
+                            <PeriodItensCells key={index} periodItens={periodItens} />)
+                        : ""}
+                </section>
             </div>
             <RemainingSalary />
         </div>

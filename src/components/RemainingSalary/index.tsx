@@ -83,12 +83,19 @@ const RemainingSalary = () => {
         }
         resultOnMonth = salary - expenses
         if (resultOnMonth.toFixed(2) !== 'NaN') {
+            const h2 = document.getElementById("remainingSalary")!
+            if(resultOnMonth < 0){
+                h2.classList.add("text-red-700")
+            } else {
+                h2.classList.remove("text-red-700")
+            }
             setRemainingSalary(resultOnMonth.toFixed(2).replace('.', ','))
         }
     }
     return (
-        <h2 className="flex px-4 font-medium text-lg border-2 rounded-lg border-gray-400">
-            Total no mês: R${remainingSalary}
+        <h2 className="flex gap-2 px-4 font-medium text-lg border-2 rounded-lg border-gray-400 ">
+            <p>Total no mês:</p> 
+            <p id="remainingSalary" className="border-gray-400"> R${remainingSalary}</p>
         </h2>
     )
 }

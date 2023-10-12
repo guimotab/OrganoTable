@@ -8,6 +8,15 @@ module.exports = {
   // },
   theme: {
     extend: {
+      keyframes: {
+        slideLeft: {
+          "0%": { transform: "translateX(5px)", opacity: "0" },
+          "100%": { transform: "translateX(0px)", opacity: "1" }
+        },
+      },
+      animation: {
+        slideLeftIcon: "slideLeft 0.5s 0.2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",
+      },
       left:{
         "60rem": "60rem"
       },
@@ -18,17 +27,6 @@ module.exports = {
         "6.25rem": "6.25rem",
         "21rem": "21rem",
         "25rem": "25rem"
-      },
-      keyframes:{
-        carregamento: {
-          to: { transform: "scaleX(1.25)" },
-          from: { transform: "translateY(-12px) scaleX(1)" },
-        },
-      },
-      animation:{
-        "carregar-um": "carregamento 450ms alternate infinite",
-        "carregar-dois": "carregamento 450ms 150ms alternate infinite",
-        "carregar-tres": "carregamento 450ms 300ms alternate infinite",
       },
       colors: {
         cor: {

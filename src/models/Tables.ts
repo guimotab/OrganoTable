@@ -16,7 +16,7 @@ export class Tables {
         const newIdTable = this.highestId() + 1
         const newTable = {
             id: `${newIdTable}`,
-            salary: "",
+            salary: "0,00",
             monthTable: dateCurrent,
             itensTable: [],
             highestIdInstallment: "",
@@ -25,11 +25,13 @@ export class Tables {
     }
 
     updateTables(currentDate: string, currentTable: IObjectTable) {
+        const fakeTable = [...this._tables]
         try{
-            this._tables.splice(this.indexCurrentTable(currentDate), 1)
+            fakeTable.splice(this.indexCurrentTable(currentDate), 1)
         } catch {
         }
-        this._tables.push(currentTable)
+        fakeTable.push(currentTable)
+        this._tables = fakeTable
     }
 
     indexCurrentTable(currentDate: string) {

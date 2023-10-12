@@ -1,3 +1,4 @@
+import { log } from "console";
 import { CurrentTable } from "../models/CurrentTable";
 import NewCellTable from "../models/NewCellTable";
 import { Tables } from "../models/Tables";
@@ -21,25 +22,24 @@ export function createOthersInstallments(installment: string, currentTable: Curr
         if (thereIsTable) {
             const thisTable = new CurrentTable(allTables.tables[existTable])
             const thisCurrentTable = new CurrentTable(allTables.tables[existTable])
-            if(thisTable.itensTable[0]){ //se possui algum primeiro elemento
-                console.log(1);
+            if (thisTable.itensTable[0]) { //se possui algum primeiro elemento
                 const lastCell = thisTable.itensTable.length - 1
                 const idLastCell = thisTable.itensTable[lastCell].id
                 newCellTable.installment = `${i + 1}/${installmentNumber}`
                 newCellTable.id = `${thisTable.id}.${parseFloat(IdTable.returnIdCell(idLastCell)) + 1}${idOriginalTable}`
                 thisCurrentTable.itensTable.push(newCellTable.returnInformations())
-                allTables.updateTables(thisMonthYear, thisCurrentTable)
+                allTables.updateTables(thisMonthYear, thisCurrentTable.getInformations())
             } else { //se não possui primeiro elemento
-                console.log(2);
-                const lastId = allTables.highestId()
-                thisTable.id =`${lastId + 1}`
+                if(thisTable.id === "0"){
+                    const lastId = allTables.highestId()
+                    thisTable.id = `${lastId + 1}`
+                }
                 newCellTable.installment = `${i + 1}/${installmentNumber}`
                 newCellTable.id = `${thisTable.id}.0${idOriginalTable}`
                 thisTable.itensTable.push(newCellTable.returnInformations())
                 allTables.updateTables(thisTable.monthTable, thisTable.getInformations())
             }
         } else if (!thereIsTable) {//se não existe alguma tabela igual mês
-            console.log(3);
             allTables.updateTables(currentTable.monthTable, currentTable.getInformations())
             allTables.createNewTable(thisMonthYear)
             const indexThisTable = allTables.tables.findIndex(table => table.monthTable === `${thisMonthYear}`)
