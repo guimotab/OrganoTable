@@ -3,7 +3,6 @@ interface FormInputTextProps {
     value: number | string
     setValue: React.Dispatch<React.SetStateAction<string>>
     pattern?: string
-    //required: boolean
     minLength?: number
     maxLength?: number
     tagP?: string

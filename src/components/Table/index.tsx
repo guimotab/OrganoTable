@@ -28,13 +28,14 @@ const Table = () => {
                     {titlesTable.map((title, index) => <div className={title.width} key={index}>{title.name}</div>)}
                 </div>
                 <section className='flex flex-col gap-1 max-h-[27rem] overflow-auto '>
-                    {currentTable.itensTable.map((tableItens: ITableItens, index: number) =>
+                    {currentTable.itensTable.map((tableItens: ITableItens) =>
                         !tableItens.repeat ?
-                            <TableItensCells key={index} tableItens={tableItens} />
-                            : <></>)}
+                            <TableItensCells key={tableItens.id} tableItens={tableItens} />
+                            : <></>
+                    )}
                     {periodItens[0] ?
-                        periodItens.map((periodItens: IPeriodsItens, index: number) =>
-                            <PeriodItensCells key={index} periodItens={periodItens} />)
+                        periodItens.map((periodItens: IPeriodsItens) =>
+                            <PeriodItensCells key={periodItens.id} periodItens={periodItens} />)
                         : ""}
                 </section>
             </div>

@@ -5,7 +5,6 @@ import Table from './components/Table';
 import TableCurrentMonth from './components/Table/TableCurrentMonth';
 import CreateTableCell from './components/Table/CreateTableCell';
 function App() {
-  //Falta aumentar o heigth da quantidade de items que ppde ter na table antes de mostrar o overflow
   return (
     <RecoilRoot>
       <div className='flex flex-col w-screen items-center'>

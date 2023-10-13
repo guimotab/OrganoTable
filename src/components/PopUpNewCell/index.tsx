@@ -53,6 +53,7 @@ const PopUpNewCell = ({setOpenPopUp}: PopUpNewCellProps) => {
                         type: typeRepeat,
                         days: daysRepeat
                     },
+                    datePaid: [],
                     showUntilMonth: ""
                 } as IPeriodsItens
                 arrayPeriodItens.push(newPeriodItens)

@@ -1,7 +1,5 @@
 export abstract class IdTable{
     static returnIdCell(id: string){
-        // const regex = /^(\d+).(\d+)$/
-        
         const result = id.split(".")
         const id2 = result[1]
         return id2

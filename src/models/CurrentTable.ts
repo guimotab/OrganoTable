@@ -24,9 +24,6 @@ export class CurrentTable {
             itensTable: this._itensTable,
         }
     }
-    constructPeriodItems() {
-        return [{ id: "", periods: { type: "", days: [] }, showUntilMonth: "" }] as IPeriodsItens[]
-    }
 
     public get id(): string {
         return this._id
@@ -58,16 +55,4 @@ export class CurrentTable {
             this._itensTable.push(...newItensTable)
         }
     }
-    // public set periodsItens(newPeriodsItens: IPeriodsItens[]) {
-    //     try {
-    //         if (this._periodsItens[0].id === "") {
-    //             this._periodsItens = newPeriodsItens
-    //         } else {
-    //             this.periodsItens.push(...newPeriodsItens)
-    //         }
-    //     } catch {
-    //         this._periodsItens = this.constructPeriodItems()
-    //         this.periodsItens.push(...newPeriodsItens)
-    //     }
-    // }
 }

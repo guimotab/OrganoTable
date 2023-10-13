@@ -48,7 +48,7 @@ const TableItensCells = ({ tableItens }: TableItensCellsProps) => {
         LocalStorager.saveTablesInformations(allTables.tables)
     }
     function updateAllInstallments(valueInput: string = typeCell) {
-        const quantity = parseFloat(installmentCell.split('/')[1]) // 1/2
+        const quantity = parseFloat(installmentCell.split('/')[1])
         const idOriginalTable = idCell.split("-")[1]
         for (let i = 0; i < quantity; i++) {
             const indexThisTable = allTables.tables.findIndex(table => parseFloat(table.id) === parseFloat(idOriginalTable.split("P")[0]) + i)
@@ -133,7 +133,7 @@ const TableItensCells = ({ tableItens }: TableItensCellsProps) => {
                         value={nameCell}
                         onChange={event => { setNameCell(event.target.value) }}
                         onBlur={event => onEndEditCell(event)}
-                        className='px-2 w-full font-medium placeholder:font-medium border-cor-outline cursor-pointer'
+                        className='px-2 w-full font-medium placeholder:font-medium border-cor-outline'
                         placeholder={nameCell}
                         maxLength={24}
                         pattern="^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$"
@@ -145,7 +145,7 @@ const TableItensCells = ({ tableItens }: TableItensCellsProps) => {
                         value={valueCell}
                         onChange={event => { setValueCell(event.target.value) }}
                         onBlur={event => onEndEditCell(event)}
-                        className='px-2 w-full font-medium placeholder:font-medium border-cor-outline cursor-pointer'
+                        className='px-2 w-full font-medium placeholder:font-medium border-cor-outline'
                         placeholder={valueCell}
                         maxLength={12}
                         pattern="^(\d+)(\,|\.)(\d{2})?$"
@@ -155,7 +155,7 @@ const TableItensCells = ({ tableItens }: TableItensCellsProps) => {
                     <p className='font-medium'>{installmentCell}</p>
                 </div>
                 <div className='flex justify-start px-4 w-44 border-gray-300 border-r-2'>
-                    <select onChange={event => changeTypeInput(event)} value={typeCell} className='w-40 font-medium cursor-pointer'>
+                    <select onChange={event => changeTypeInput(event)} value={typeCell} className='w-40 font-medium'>
                         {optionsSelectInput.map((option, index) =>
                             <option key={index} className='font-medium'>{option.label}</option>
                         )}

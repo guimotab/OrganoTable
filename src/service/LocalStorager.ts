@@ -31,10 +31,8 @@ export class LocalStorager {
   }
   static saveTablesInformations(localStorager: IObjectTable[]) {
     return localStorage.setItem("Tables", JSON.stringify(localStorager))
-    //return localStorage.setItem("Tables", JSON.stringify(deleteTablesUnused(localStorager)))
   }
   static savePeriodItens(localStorager: IPeriodsItens[]) {
     return localStorage.setItem("PeriodItens", JSON.stringify(localStorager))
-    //return localStorage.setItem("Tables", JSON.stringify(deleteTablesUnused(localStorager)))
   }
 }

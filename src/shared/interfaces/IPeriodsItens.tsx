@@ -4,5 +4,6 @@ export default interface IPeriodsItens{
         type: string
         days?: string[]
     }
+    datePaid: string[]
     showUntilMonth: string
 }
