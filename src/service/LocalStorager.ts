@@ -4,10 +4,9 @@ import { dayTime } from "../utils/dayTime"
 
 export class LocalStorager {
   static getTables() {
-    const returnLocalStorage = localStorage.getItem("Tables")
     let localStorageTables
-    if (returnLocalStorage) {
-      localStorageTables = JSON.parse(returnLocalStorage) as IObjectTable[]
+    if (localStorage.getItem("Tables")) {
+      localStorageTables = JSON.parse(localStorage.getItem("Tables")!) as IObjectTable[]
     } else {
      
       localStorageTables = [{
@@ -20,10 +19,9 @@ export class LocalStorager {
     return localStorageTables
   }
   static getPeriodItens() {
-    const returnLocalStorage = localStorage.getItem("PeriodItens")
     let localStoragePeriodItens
-    if (returnLocalStorage) {
-      localStoragePeriodItens = JSON.parse(returnLocalStorage) as IPeriodsItens[]
+    if (localStorage.getItem("PeriodItens")) {
+      localStoragePeriodItens = JSON.parse(localStorage.getItem("PeriodItens")!) as IPeriodsItens[]
     } else {
       localStoragePeriodItens = [] as IPeriodsItens[]
     }
